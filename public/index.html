@@ -1,6 +1,194 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Hồ sơ năng lực trong lĩnh vực phần mềm giáo dục và quản lý đào tạo."><meta name="theme-color" content="#182c35"><title>Nông Thị Hồng Cúc — Hồ sơ ứng tuyển</title><link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./styles.css"></head><body>
-<a href="#main" class="skip-link">Đến nội dung chính</a>
-<header class="site-header"><a class="brand" href="#" aria-label="Về đầu trang"><span class="brand-mark">c.</span><span>CV <b>ATELIER</b><small>HỒ SƠ CÁ NHÂN</small></span></a><nav aria-label="Điều hướng"><a href="#experience">Kinh nghiệm</a><a href="#profile">Hồ sơ</a><a href="#contact">Liên hệ</a></nav><div class="header-actions"><button class="btn btn-plain" id="editButton"></button><button class="btn btn-dark" id="printButton"></button></div></header>
-<main id="main"></main><footer class="site-footer"><span>© 2026 HuyVo. All rights reserved · v1.0.0</span><button id="storageInfo" class="text-button">Dữ liệu lưu trên trình duyệt</button></footer>
-<div id="backdrop" class="backdrop" hidden></div><aside id="editor" class="editor" aria-labelledby="editorTitle" role="dialog" aria-modal="true" hidden><div class="editor-head"><div><span class="eyebrow">KHÔNG GIAN CỦA BẠN</span><h2 id="editorTitle">Chỉnh sửa hồ sơ</h2></div><button id="closeEditor" class="icon-button" aria-label="Đóng bảng chỉnh sửa"></button></div><div class="save-row"><span id="saveState" role="status">Đã lưu trên trình duyệt</span><button id="undoButton" class="text-button">Hoàn tác</button></div><div class="editor-tabs" role="tablist" aria-label="Nhóm thông tin"><button role="tab" data-tab="profile">Cá nhân</button><button role="tab" data-tab="experience">Kinh nghiệm</button><button role="tab" data-tab="education">Học vấn</button><button role="tab" data-tab="design">Thiết kế</button></div><div id="editorBody" class="editor-body" role="tabpanel"></div><div class="editor-footer"><button id="backupButton" class="btn btn-light">Sao lưu</button><button id="importButton" class="btn btn-light">Khôi phục</button><a id="htmlButton" href="#" role="button" class="btn btn-dark">Tải trang CV</a></div><input type="file" id="importFile" accept="application/json,.json" hidden><input type="file" id="photoFile" accept="image/jpeg,image/png,image/webp" hidden></aside>
-<div id="toast" class="toast" role="status" hidden></div><dialog id="confirmDialog"><h2>Đặt lại hồ sơ?</h2><p>Các thay đổi trên trình duyệt này sẽ được thay bằng mẫu ban đầu. Hãy sao lưu nếu cần giữ lại.</p><div class="dialog-actions"><button class="btn btn-light" id="cancelReset">Giữ hồ sơ</button><button class="btn btn-dark" id="confirmReset">Đặt lại</button></div></dialog><div id="printCv"></div><script type="module" src="./app.js"></script></body></html>
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="CV Atelier - Thiết kế CV chuyên nghiệp, nội dung rõ ràng và xuất PDF A4."
+    />
+    <meta name="theme-color" content="#182c35" />
+    <title>CV Atelier · Studio</title>
+    <link rel="icon" href="./favicon.svg" />
+    <link rel="stylesheet" href="./landing.css" />
+    <link rel="stylesheet" href="./studio.css" />
+    <script defer src="./vendor/pdf-lib.min.js"></script>
+    <script defer src="./vendor/fontkit.umd.min.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#workspace">Đến trang thiết kế</a>
+    <header class="topbar">
+      <a href="#" class="studio-brand" aria-label="CV Atelier"
+        ><span class="monogram">c.</span
+        ><span>CV <b>ATELIER</b><small>PROFESSIONAL STUDIO</small></span></a
+      >
+      <div class="mode-switch" role="group" aria-label="Chế độ xem">
+        <button id="studioMode" aria-pressed="true">CV A4</button
+        ><button id="landingMode" aria-pressed="false">Landing page</button>
+      </div>
+      <div class="top-actions">
+        <span id="saveStatus" role="status">Đang mở hồ sơ…</span
+        ><button id="undo" class="tool" aria-label="Hoàn tác" title="Hoàn tác">
+          ↶</button
+        ><button id="redo" class="tool" aria-label="Làm lại" title="Làm lại">
+          ↷</button
+        ><button id="exportOpen" class="primary">
+          Xuất hồ sơ <span aria-hidden="true">↗</span>
+        </button>
+      </div>
+    </header>
+    <div id="recoveryBanner" class="recovery-banner" hidden></div>
+    <div class="app-shell">
+      <aside id="sectionsPanel" class="sections-panel">
+        <div class="panel-eyebrow">KHÔNG GIAN THIẾT KẾ</div>
+        <h1>Hồ sơ của bạn</h1>
+        <p class="panel-description">
+          Một câu chuyện rõ ràng.<br />Một ấn tượng chuyên nghiệp.
+        </p>
+        <div class="section-label">CẤU TRÚC CV <span>Kéo để sắp xếp</span></div>
+        <div id="sectionList" aria-label="Thứ tự các mục CV"></div>
+        <button id="profileNav" class="rail-action">
+          Thông tin & ảnh đại diện <span>↗</span></button
+        ><button id="designNav" class="rail-action">
+          Kiểu dáng & trang giấy <span>↗</span></button
+        ><button id="reviewNav" class="rail-action">
+          Rà soát nội dung <span id="reviewCount"></span>
+        </button>
+        <div class="rail-footer">
+          <span>© 2026 HuyVo. All rights reserved</span
+          ><small>v1.2.0 · Lưu riêng trên trình duyệt</small>
+        </div>
+      </aside>
+      <main id="workspace" class="workspace">
+        <div class="canvas-toolbar">
+          <div>
+            <span class="canvas-label" id="canvasLabel">BẢN THIẾT KẾ A4</span
+            ><span id="pageCount">Đang dựng bố cục…</span>
+          </div>
+          <div class="zoom-controls">
+            <button id="zoomOut" class="tool" aria-label="Thu nhỏ">−</button
+            ><select id="zoom" aria-label="Mức thu phóng">
+              <option value="fit">Vừa chiều rộng</option>
+              <option value="page">Vừa trang</option>
+              <option value="0.6">60%</option>
+              <option value="0.8">80%</option>
+              <option value="1">100%</option>
+              <option value="1.25">125%</option>
+              <option value="1.5">150%</option></select
+            ><button id="zoomIn" class="tool" aria-label="Phóng to">+</button>
+          </div>
+        </div>
+        <div id="layoutWarnings" class="layout-notice" role="status"></div>
+        <div id="canvasScroll" class="canvas-scroll">
+          <div id="pages" class="pages">
+            <div class="loading-card">Đang tải font tiếng Việt và dựng CV…</div>
+          </div>
+          <div id="landing" class="landing-preview" hidden></div>
+        </div>
+        <div class="canvas-bottom">
+          <span>Bấm vào nội dung trên trang giấy để chỉnh sửa</span
+          ><button id="mobileEdit">Mở bảng chỉnh sửa</button>
+        </div>
+      </main>
+      <aside id="properties" class="properties" aria-label="Bảng chỉnh sửa">
+        <header class="properties-head">
+          <div>
+            <span class="panel-eyebrow">CHỈNH SỬA HỒ SƠ</span>
+            <h2 id="formTitle">Thông tin cá nhân</h2>
+          </div>
+          <button
+            id="closeProperties"
+            class="tool"
+            aria-label="Đóng bảng chỉnh sửa"
+          >
+            ×
+          </button>
+        </header>
+        <label class="group-select-label"
+          >Nhóm thông tin<select
+            id="groupSelect"
+            aria-label="Chọn nhóm chỉnh sửa"
+          >
+            <option value="profile">Cá nhân & ảnh</option>
+            <option value="experience">Kinh nghiệm</option>
+            <option value="projects">Dự án & đơn vị</option>
+            <option value="education">Học vấn & chứng chỉ</option>
+            <option value="skills">Kỹ năng & công cụ</option>
+            <option value="content">Định hướng & rà soát</option>
+            <option value="design">Kiểu dáng & bố cục</option>
+          </select></label
+        >
+        <div id="form" class="property-body"></div>
+        <div class="property-footer">
+          <button id="backup">Sao lưu JSON</button
+          ><button id="restore">Khôi phục</button>
+        </div>
+      </aside>
+    </div>
+    <input
+      id="photoFile"
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+      hidden
+    /><input id="jsonFile" type="file" accept=".json,application/json" hidden />
+    <dialog id="exportDialog">
+      <div class="dialog-heading">
+        <div>
+          <span class="panel-eyebrow">SẴN SÀNG CHO HÀNH TRÌNH MỚI</span>
+          <h2>Xuất hồ sơ</h2>
+        </div>
+        <button id="closeExport" class="tool" aria-label="Đóng xuất hồ sơ">
+          ×
+        </button>
+      </div>
+      <p class="dialog-copy">
+        PDF chữ thật, font tiếng Việt nhúng sẵn. Bố cục dùng chung với trang A4
+        đang xem.
+      </p>
+      <div id="exportReview"></div>
+      <button id="downloadPdf" class="export-option">
+        <span class="file-badge">PDF</span
+        ><span
+          ><b>Tải PDF A4</b
+          ><small>Giữ bố cục, có thể chọn và tìm kiếm chữ</small></span
+        ><span>↓</span></button
+      ><button id="downloadCvHtml" class="export-option">
+        <span class="file-badge">A4</span
+        ><span
+          ><b>Tải CV HTML</b
+          ><small>Mở offline, font và ảnh nằm trong tệp</small></span
+        ><span>↓</span></button
+      ><button id="downloadLanding" class="export-option">
+        <span class="file-badge">WEB</span
+        ><span
+          ><b>Tải landing page</b
+          ><small>Trang chỉ xem, kèm CV A4 khi in</small></span
+        ><span>↓</span></button
+      ><button id="print" class="print-link">In bằng trình duyệt</button>
+      <p class="local-note">
+        Nội dung chỉnh sửa lưu riêng tại trình duyệt này; chưa đồng bộ lên
+        website cho người khác.
+      </p>
+    </dialog>
+    <dialog id="resetDialog">
+      <h2>Đặt lại mẫu ban đầu?</h2>
+      <p>
+        Hãy sao lưu trước nếu cần giữ nội dung. Có thể hoàn tác trong phiên hiện
+        tại.
+      </p>
+      <div class="dialog-buttons">
+        <button id="cancelReset">Giữ hồ sơ</button
+        ><button id="confirmReset" class="primary">Đặt lại</button>
+      </div>
+    </dialog>
+    <dialog id="downloadDialog">
+      <h2>Tệp đã sẵn sàng</h2>
+      <p id="downloadInfo"></p>
+      <a id="readyLink" class="primary" download>Tải tệp xuống ↓</a
+      ><button id="closeDownload" class="print-link">Đóng</button>
+    </dialog>
+    <div id="toast" class="studio-toast" role="status" hidden></div>
+    <div id="printOutput"></div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

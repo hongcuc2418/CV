@@ -1,9 +1,59 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import {defaults,clone,validateData,setPath,escapeHtml,safeContact} from '../public/model.js';
-test('backup round trip preserves all fields, photo and design',()=>{const d=clone(defaults);d.profile.photo='data:image/jpeg;base64,YWJj';d.profile.photoY=80;d.design.theme='forest';d.education[0].school='Trường đại học';assert.deepEqual(validateData(JSON.parse(JSON.stringify(d))),d);});
-test('rejects executable avatar and invalid schema without mutating defaults',()=>{const d=clone(defaults);d.profile.photo='javascript:alert(1)';assert.throws(()=>validateData(d));assert.throws(()=>validateData({schemaVersion:2}));assert.equal(defaults.profile.photo,'');});
-test('rejects oversized lists and nonboolean visibility fields',()=>{const d=clone(defaults);d.institutions=Array(41).fill('A');assert.throws(()=>validateData(d));d.institutions=[];d.design.draft='false';assert.throws(()=>validateData(d));});
-test('prototype pollution fields are stripped on import and blocked in setters',()=>{const d=JSON.parse(JSON.stringify(defaults));d.profile.__proto__={polluted:true};const clean=validateData(d);assert.equal(clean.profile.polluted,undefined);assert.throws(()=>setPath(clean,'__proto__.polluted',true));assert.equal({}.polluted,undefined);});
-test('text is escaped and unsafe contact urls are rejected',()=>{assert.equal(escapeHtml('<img src=x onerror="alert(1)">'),'&lt;img src=x onerror=&quot;alert(1)&quot;&gt;');assert.equal(safeContact('email','a@b.vn'),'mailto:a@b.vn');assert.equal(safeContact('email','javascript:alert(1)'),'');assert.equal(safeContact('phone','+84 123 456 789'),'tel:+84123456789');assert.equal(safeContact('phone','javascript:alert(1)'),'');});
-test('nested editable paths and list updates work',()=>{const d=clone(defaults);setPath(d,'experiences.0.company','Đơn vị mới');assert.equal(d.experiences[0].company,'Đơn vị mới');setPath(d,'design.draft',false);assert.equal(d.design.draft,false);assert.throws(()=>setPath(d,'profile.unknown','bad'));});
+import test from "node:test";
+import assert from "node:assert/strict";
+import {
+  defaults,
+  clone,
+  validateData,
+  setPath,
+  escapeHtml,
+  safeContact,
+} from "../public/model.js";
+test("backup round trip preserves all fields, photo and design", () => {
+  const d = clone(defaults);
+  d.profile.photo = "data:image/jpeg;base64,YWJj";
+  d.profile.photoY = 80;
+  d.design.theme = "forest";
+  d.education[0].school = "Trường đại học";
+  assert.deepEqual(validateData(JSON.parse(JSON.stringify(d))), d);
+});
+test("rejects executable avatar and invalid schema without mutating defaults", () => {
+  const d = clone(defaults);
+  d.profile.photo = "javascript:alert(1)";
+  assert.throws(() => validateData(d));
+  assert.throws(() => validateData({ schemaVersion: 2 }));
+  assert.equal(defaults.profile.photo, "");
+});
+test("rejects oversized lists and nonboolean visibility fields", () => {
+  const d = clone(defaults);
+  d.institutions = Array(3001).fill("A");
+  assert.throws(() => validateData(d));
+  d.institutions = [];
+  d.design.draft = "false";
+  assert.throws(() => validateData(d));
+});
+test("prototype pollution fields are stripped on import and blocked in setters", () => {
+  const d = JSON.parse(JSON.stringify(defaults));
+  d.profile.__proto__ = { polluted: true };
+  const clean = validateData(d);
+  assert.equal(clean.profile.polluted, undefined);
+  assert.throws(() => setPath(clean, "__proto__.polluted", true));
+  assert.equal({}.polluted, undefined);
+});
+test("text is escaped and unsafe contact urls are rejected", () => {
+  assert.equal(
+    escapeHtml('<img src=x onerror="alert(1)">'),
+    "&lt;img src=x onerror=&quot;alert(1)&quot;&gt;",
+  );
+  assert.equal(safeContact("email", "a@b.vn"), "mailto:a@b.vn");
+  assert.equal(safeContact("email", "javascript:alert(1)"), "");
+  assert.equal(safeContact("phone", "+84 123 456 789"), "tel:+84123456789");
+  assert.equal(safeContact("phone", "javascript:alert(1)"), "");
+});
+test("nested editable paths and list updates work", () => {
+  const d = clone(defaults);
+  setPath(d, "experiences.0.company", "Đơn vị mới");
+  assert.equal(d.experiences[0].company, "Đơn vị mới");
+  setPath(d, "design.draft", false);
+  assert.equal(d.design.draft, false);
+  assert.throws(() => setPath(d, "profile.unknown", "bad"));
+});

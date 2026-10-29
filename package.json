@@ -1,1 +1,16 @@
-{"name":"cv-atelier","version":"1.0.0","private":true,"type":"module","description":"Editable academic CV landing page","engines":{"node":">=22"},"scripts":{"dev":"node scripts/serve.mjs","build":"node scripts/build.mjs","test":"node --test","check":"node --check public/app.js && node --check public/model.js"}}
+{
+  "name": "cv-atelier",
+  "version": "1.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Professional Vietnamese CV Studio with shared A4 and PDF renderer",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test",
+    "check": "node scripts/check.mjs"
+  }
+}
