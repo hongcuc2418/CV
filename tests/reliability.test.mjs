@@ -136,7 +136,12 @@ test("landing keeps results and project roles, omits empty placeholders in stati
       confirmed: true,
     },
   ];
-  const html = renderLandingView(d, { staticMode: true });
+  const { createLayout } = await import("../public/document.js");
+  const layout = createLayout(d, {
+    width: (t, s) => [...t].length * s * 0.55,
+    supports: () => true,
+  });
+  const html = renderLandingView(d, { staticMode: true, layout });
   assert.ok(html.includes("Đóng góp đã xác nhận"));
   assert.ok(html.includes("Vai trò thực tế"));
   assert.ok(!html.includes("Bổ sung email"));

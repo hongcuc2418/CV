@@ -1,101 +1,99 @@
-# CV Atelier — v1.3.1
+# CV Atelier — v1.4.0
 
-Bản tinh chỉnh **Modern 1 Layout** từ `CV-Atelier_v1.3.0.zip`. Thêm layout theo mẫu Boss chọn: ảnh tròn trái, tên/vị trí cùng hàng, liên hệ hai cột và kinh nghiệm có cột chức danh/thời gian. Giữ dữ liệu, ba mẫu cũ và các luồng Studio/PDF/HTML. Boss tự push GitHub và deploy Vercel.
+**Multiple CVs & Recovery**: quản lý nhiều bản ứng tuyển độc lập, lịch sử có tên, so sánh và khôi phục. Bản này cũng sửa Landing page dùng đúng mẫu và hình học A4, thay giao diện hero cũ. Nâng cấp từ ZIP `CV-Atelier_v1.3.1(1).zip` Boss cung cấp. Boss tự push GitHub và deploy Vercel.
 
-## 1. Chức năng đã xây dựng
+## 1. Chức năng
 
-### Thư viện mẫu CV v1.3.1
+### Nhiều hồ sơ ứng tuyển
 
-| Mẫu | Thiết kế | Phù hợp |
-| --- | --- | --- |
-| Modern 1 · Thanh lịch — mặc định hồ sơ mới | Ảnh tròn viền đỏ trầm, tên/vị trí cùng hàng, liên hệ hai cột, kinh nghiệm theo hàng | Phong cách Boss chọn từ mẫu Modern 1 |
-| Academic Executive | Đầu trang xanh mực, sắc đồng, tiêu đề serif, hai cột | Hồ sơ ứng tuyển trong trường đại học |
-| Modern Professional | Một cột, tên nổi bật, nhịp mục rõ và hàng kinh nghiệm có nền nhẹ | Làm nổi bật kinh nghiệm, dự án và đóng góp |
-| Classic ATS | Một cột văn bản, đen trắng, không ảnh/mảng nền | Ưu tiên thứ tự đọc và trích xuất chữ |
+- Nút **CV của tôi** trên thanh đầu; danh sách chọn nhanh **Đang chỉnh sửa** ngay phía trên trang giấy.
+- **Tạo CV**: bắt đầu từ nội dung mẫu. **Nhân bản**: sao chép nội dung/thiết kế của hồ sơ đang chọn sang một CV có ID độc lập; lịch sử của bản sao bắt đầu từ thời điểm nhân bản.
+- Đặt tên hồ sơ, trường/đơn vị và vị trí ứng tuyển. Trường là nhãn quản lý; vị trí được cập nhật ở đầu CV. App không tự thêm đơn vị ứng tuyển vào kinh nghiệm/dự án.
+- Tìm theo tên, trường hoặc vị trí. Sửa nội dung, ảnh, màu, mẫu, thứ tự mục của một CV không thay CV khác.
+- **Lưu trữ** để ẩn CV khỏi danh sách đang dùng; chọn **Đã lưu trữ → Khôi phục & mở CV** để dùng lại, giữ nội dung và lịch sử. Cần giữ ít nhất một hồ sơ đang dùng.
+- Đổi CV sẽ làm mới ngăn hoàn tác trong phiên để tránh áp dụng lịch sử gõ của CV trước; lịch sử phiên bản đã lưu vẫn giữ riêng theo CV.
 
-- **Với hồ sơ đã lưu:** app giữ mẫu và cỡ chữ/lề/font cũ. Để áp dụng layout mới, chọn **Mẫu CV chuyên nghiệp → Modern 1 · Thanh lịch**. Chọn **Kiểu dáng → Kiểu chữ tiêu đề → Hiện đại · Không chân** nếu muốn tiêu đề sans giống bản mặc định mới. Không cần đặt lại dữ liệu.
-- Mẫu mới chỉ dùng thông tin đã có. Liên hệ trống không hiện placeholder trên bản gửi; avatar để trống cho đến khi tải ảnh. Ẩn ảnh sẽ mở rộng vùng tên/liên hệ. Không tự thêm ngày sinh/giới tính hoặc thông tin chưa cung cấp.
-- Bố cục Modern 1 tham khảo [mẫu Boss gửi](https://www.topcv.vn/mau-cv-tieng-viet/modern_1_v2); source dựng bằng token vector, không dùng ảnh chụp mẫu làm CV.
-- Mở **Mẫu CV chuyên nghiệp** bên trái hoặc tên mẫu phía trên trang giấy. Thẻ xem trước dùng chính nội dung hồ sơ hiện tại.
-- Đổi mẫu giữ nguyên nội dung, xác nhận, ảnh, vị trí crop, lề/font/mật độ; có thể hoàn tác/làm lại. Lựa chọn được lưu ngay, có báo lỗi nếu trình duyệt không cho lưu.
-- **Bản đen trắng** áp dụng cho CV A4, PDF, CV HTML và phần A4 khi in Landing HTML; chữ, nền, đường nét và ảnh A4 chuyển sắc xám. Không thay ảnh gốc trong hồ sơ/backup. Landing page trên màn hình vẫn giữ thiết kế riêng.
-- Academic đặt liên hệ, đơn vị dự án, học vấn, kỹ năng và chứng chỉ ở cột phụ; tóm tắt, kinh nghiệm, dự án và mục tiêu ở cột chính. Thứ tự kéo thả áp dụng **trong từng cột**; đổi sang mẫu một cột sẽ dùng thứ tự toàn bộ danh sách.
-- Classic ATS luôn đen trắng và không hiển thị ảnh; ảnh cùng lựa chọn màu/hiển thị vẫn được giữ để dùng khi chuyển sang mẫu khác. Không bảo đảm mọi hệ thống ATS đều đọc giống nhau; cần rà nội dung trích xuất trước khi gửi.
-- JSON v1/v2 cũ vẫn nhập được. Hồ sơ v2 chưa có trường mẫu sẽ được bổ sung `academic`, không đặt lại nội dung hoặc các thông số đã chỉnh.
+### Lịch sử và khôi phục
 
-### CV Studio A4
+- Tự lưu nội dung sau khi ngừng nhập 500 ms. App giữ hiện trạng trước lần thay đổi đầu tiên, sau đó tối đa một mốc tự động mỗi phút khi tiếp tục sửa.
+- Giữ **20 mốc tự động gần nhất** và tối đa **40 mốc được giữ** mỗi CV, gồm ban đầu, mốc đặt tên và mốc an toàn trước đổi đích ứng tuyển/khôi phục/đặt lại.
+- **Lưu phiên bản** để đặt tên một mốc quan trọng, ví dụ “Đã rà soát trước khi gửi VLU”. Mốc có tên không bị dọn theo giới hạn tự lưu.
+- **So sánh** bản hiện tại với lịch sử hoặc giữa hai CV. Chỉ hiển thị trường khác nhau: nội dung, nhiệm vụ/kết quả, dự án, xác nhận, đơn vị ứng tuyển, ảnh/crop, mẫu/màu/font/lề và thứ tự mục.
+- Bản A và B chỉ là hai phía đối chiếu. So sánh không tự thay dữ liệu. Ô quá dài hiện 14.000 ký tự đầu có ghi chú; dữ liệu đầy đủ vẫn giữ trong hồ sơ/backup.
+- **Khôi phục** có màn xác nhận và tự giữ hiện trạng thành một mốc trước khi áp dụng. Không đổi các CV khác.
+- Có thể xóa mốc không cần sau xác nhận. Xóa mốc không thay CV hiện tại; mốc đã xóa chỉ lấy lại được từ backup đã tải. Khi đủ 40 mốc được giữ, app từ chối tạo thêm/khôi phục nếu chưa có chỗ giữ mốc an toàn.
 
-- Trang giấy A4 ở giữa; cấu trúc mục bên trái; bảng chỉnh sửa bên phải.
-- Bấm nội dung trên trang giấy để mở đúng trường. Ô nhập không bị dựng lại khi đang gõ tiếng Việt.
-- Chuyển **CV A4 / Landing page**, sử dụng cùng dữ liệu.
-- Zoom vừa chiều rộng / vừa trang / 60–150%. Zoom chỉ thay cách xem, không thay kích thước PDF.
-- Sắp xếp mục bằng kéo thả hoặc nút lên/xuống; ẩn/hiện giữ nguyên dữ liệu. Trên điện thoại dùng **Kiểu dáng & bố cục → Thứ tự & hiển thị các mục A4**.
-- Điều chỉnh lề 10–24 mm, cỡ chữ 9–13 pt, giãn dòng 1.2–1.8, khoảng cách mục; preset Gọn / Cân bằng / Thoáng.
-- 3 bảng màu; 2 kiểu tiêu đề, dùng font tiếng Việt đóng gói sẵn.
-- Ảnh JPEG/PNG/WebP, tối đa 8 MB và 40 megapixel; tối ưu tại thiết bị, căn ngang/dọc, zoom 1–2.5 lần, tùy chọn bỏ ảnh.
-- Số trang, header tiếp trang, footer; giữ các gạch đầu dòng ngắn cùng trang khi đủ chỗ; nội dung dài tự chuyển trang, không cắt mất dữ liệu. Khi vượt 60 trang, dừng dựng/xuất và yêu cầu rút gọn, vẫn giữ dữ liệu để chỉnh.
+### A4 và Landing page đã thống nhất
 
-### Nội dung chuyên nghiệp
+- **CV A4**, **Landing page**, **CV HTML**, **Landing HTML** và PDF dùng cùng mô hình tọa độ/ngắt dòng/phân trang.
+- Landing page hiển thị trang CV co theo chiều rộng thiết bị; không còn hero/ảnh vòm và trình tự nội dung riêng của bản cũ. Tỷ lệ A4 được giữ; cỡ hiển thị có thể khác zoom của Studio, bố cục không đổi.
+- Đổi mẫu/màu/ảnh, đen trắng, sắp xếp hoặc ẩn mục sẽ áp dụng cho cả hai chế độ và bản xuất.
+- Bốn mẫu: **Modern 1 · Thanh lịch**, **Academic Executive**, **Modern Professional**, **Classic ATS**. Modern 1 là mặc định hồ sơ mới. Hồ sơ cũ giữ mẫu đã chọn.
+- Academic phân cột cố định, thứ tự mục áp dụng trong từng cột. Các mẫu còn lại dùng thứ tự toàn bộ danh sách.
+- Classic ATS luôn đen trắng, không ảnh; giữ ảnh gốc và lựa chọn màu để dùng khi đổi mẫu. Không bảo đảm mọi hệ thống ATS đọc giống nhau.
+- Lề 10–24 mm, cỡ chữ 9–13 pt, giãn dòng 1.2–1.8, zoom xem, mật độ, căn/crop ảnh; nội dung dài tự chuyển trang. Trên 60 trang hoặc phần đầu quá dài sẽ yêu cầu chỉnh nội dung, không xóa dữ liệu.
 
-- Tóm tắt chuyên môn và mục tiêu nghề nghiệp.
-- Kinh nghiệm tách **công ty / chức danh / thời gian / phạm vi / nhiệm vụ / kết quả**.
-- Dự án tách **tên đơn vị / vai trò / thời gian / nghiệp vụ-phân hệ / đóng góp**.
-- Học vấn, chứng chỉ; kỹ năng chuyên môn, công cụ, ngoại ngữ và lĩnh vực quan tâm riêng biệt.
-- Gợi ý định hướng Phòng Đào tạo / học vụ khoa-viện / quản trị hệ thống đào tạo. Không gọi AI, không cần API key. Gợi ý hồ sơ mẫu Hồng Cúc phải được rà lại trước khi áp dụng cho người khác.
-- Checklist thiếu thông tin, xác nhận nội dung từng kinh nghiệm/dự án. Sửa nội dung sẽ bỏ xác nhận cũ của mục đó.
-- Nếu còn nội dung chưa xác nhận, CV vẫn có ghi chú bản nháp kể cả khi đã tắt tùy chọn bản nháp thủ công.
+### Nội dung và xuất
 
-### Xuất và dữ liệu
+- Tóm tắt/mục tiêu; kinh nghiệm tách công ty, vai trò, thời gian, nhiệm vụ và kết quả; dự án tách đơn vị, vai trò, phạm vi và đóng góp. Học vấn, chứng chỉ và các nhóm kỹ năng.
+- Gợi ý bằng quy tắc cho nhóm vị trí đào tạo/học vụ/hệ thống, không gọi AI/API. Phải rà soát nội dung thực tế; xác nhận từng kinh nghiệm/dự án. Sửa mục đã xác nhận sẽ bỏ xác nhận cũ.
+- PDF chữ thật, font tiếng Việt nhúng; cùng crop/phân trang với A4. HTML chỉ xem, tự chứa font và ảnh, không có editor hoặc script; in A4 được.
+- Tên tệp xuất có tên hồ sơ/đơn vị/tên ứng viên để dễ phân biệt các bản ứng tuyển.
+- Không tự công khai nội dung chỉnh sửa cho người khác. Muốn trang chỉ xem, xuất Landing HTML, đổi tên `index.html` và deploy ở repo riêng.
 
-- **PDF tải trực tiếp**, không phụ thuộc hộp thoại in. PDF dùng chữ thật, font nhúng, có thể chọn/copy/tìm kiếm; cùng tọa độ, wrap dòng, crop ảnh và số trang với preview A4.
-- **CV HTML** tự chứa font và ảnh, chỉ xem, mở offline được; in A4 được.
-- **Landing HTML** tự chứa tài nguyên, không có editor/script; kèm CV A4 khi in.
-- **In bằng trình duyệt** vẫn có như phương án bổ sung.
-- Tự lưu local, Ctrl/Cmd+S, hoàn tác/làm lại, sao lưu và khôi phục JSON.
-- Nâng cấp dữ liệu và JSON schema v1 sang v2; giữ key v1 gốc. Cảnh báo khi không đọc/lưu được hoặc tab khác thay đổi dữ liệu.
+## 2. Sao lưu, nhập và nâng cấp
 
-## 2. Nội dung mẫu và thông tin cần xác nhận
+### Cách sao lưu
 
-Đã biết: Nông Thị Hồng Cúc; ASC từ 12/12/2022 đến nay; 8 tháng phần mềm HRM; tham gia dự án VLU, NTT, DNTU, NDUN, HNIVC, HDIU, TLU, IUH.
+- **Sao lưu JSON** ở bảng chỉnh sửa: xuất CV đang mở kèm nhãn ứng tuyển, thiết kế và lịch sử.
+- **CV của tôi → Sao lưu tất cả**: toàn bộ hồ sơ, lịch sử, hồ sơ lưu trữ và lựa chọn đang mở. Có thể tạo backup từ bộ nhớ khi lưu trình duyệt bị lỗi.
+- Ảnh được gom vào bảng tài nguyên trong JSON để không lặp base64 trong từng phiên bản. Ảnh gốc không bị thay khi bật đen trắng.
+- Backup dùng `format: cv-atelier-backup`, `formatVersion: 1`, `scope: cv/all`, `workspace`. Không sửa/xóa bảng `assets` thủ công vì các phiên bản có thể cùng tham chiếu ảnh.
 
-Chức danh, nhiệm vụ, kết quả, giới thiệu và mục tiêu cần ứng viên rà soát. Chưa tự tạo số liệu, thành tích, trường học, chứng chỉ hoặc thông tin liên hệ. **ASC là đơn vị công tác; tám trường là đơn vị dự án, không phải tám nơi từng làm việc.** Không tự coi kinh nghiệm phần mềm là trực tiếp phụ trách toàn bộ nghiệp vụ Phòng Đào tạo.
+### Cách nhập
 
-Mục học vấn/chứng chỉ/kỹ năng còn trống được bỏ khỏi CV A4 và PDF. Landing page ở chế độ editor có thể hiện chỗ bổ sung; bản HTML xuất loại chỗ trống để không gửi placeholder cho nhà tuyển dụng.
+1. Chọn **Nhập bản sao lưu** trong quản lý CV, hoặc **Khôi phục** ở bảng chỉnh sửa.
+2. Chọn JSON, tối đa 32 MB. App nhận backup v1.4 và JSON CV v1/v2 cũ.
+3. Xem số hồ sơ trong màn xác nhận rồi bấm **Nhập & mở bản sao**.
+4. Hồ sơ được thêm thành các bản sao với ID mới, có hậu tố “(nhập)”, giữ lịch sử nếu tệp có. CV hiện có không bị ghi đè. Đổi tên bản nhập nếu cần.
 
-## 3. Công nghệ và cấu trúc
+Trần mô hình là **30 CV gồm cả lưu trữ**; số có thể lưu thực tế phụ thuộc dung lượng trình duyệt và số ảnh/lịch sử. Nhập vượt trần, JSON lỗi hoặc lưu hết dung lượng sẽ báo lỗi, không ghi đè dữ liệu cũ. Không tự dọn ảnh/mốc được giữ để ép lưu.
 
-HTML/CSS, JavaScript ES Modules, Node.js 22 hoặc 24 LTS cho dev/build/test. Runtime dùng pdf-lib 1.17.1, fontkit 1.1.1 và DejaVu fonts được đóng gói trong source. Không tải thư viện/font từ CDN, không cần API key, database, Docker hoặc VPS. Xem `THIRD_PARTY.md` và các giấy phép đi kèm.
+### Nâng cấp từ v1.3.1 hoặc cũ hơn
 
-| File / thư mục | Vai trò |
-| --- | --- |
-| `public/model.js` | Schema v2, Unicode NFC, migration, kiểm tra dữ liệu, xác nhận và gợi ý nội dung |
-| `public/legacy-model.js` | Schema/default v1 để nâng cấp dữ liệu cũ |
-| `public/templates.js` | Danh mục bốn mẫu, chọn mẫu và phân cột |
-| `public/modern-one.js` | Hình học Modern 1, hàng kinh nghiệm hai phần và phân trang |
-| `public/photo-grayscale.js` | Chuyển ảnh sang xám khi xuất PDF mà không đổi ảnh gốc |
-| `public/document.js` | Font metrics, ngắt dòng, phân trang, tọa độ chung cho SVG A4 và PDF |
-| `public/app.js` | Studio, form, IME composition, lịch sử, ảnh và thao tác người dùng |
-| `public/landing.js`, `landing.css` | Landing page từ bản trước được giữ và mở rộng |
-| `public/storage.js` | Đọc/lưu dữ liệu; không tự ghi đè bản lỗi khi đọc |
-| `public/export.js` | HTML tự chứa font/ảnh và bố cục in |
-| `public/fonts`, `public/vendor` | Tài nguyên runtime và giấy phép |
-| `scripts/` | Dev server, kiểm tra cú pháp, build |
-| `tests/` | Migration, lưu/khôi phục, Unicode, phân trang, PDF và HTML |
+1. Mở app cũ, tải Sao lưu JSON; giữ ZIP/commit cũ.
+2. Cập nhật source và deploy trên cùng domain.
+3. Lần đầu, app chuyển CV v1/v2 sang danh sách có tên **CV chuyển từ phiên bản trước**, giữ nội dung, ảnh và mẫu.
+4. Kiểm tra CV rồi tải **Sao lưu tất cả** của bản mới.
 
-## 4. Chạy local và build
+Dữ liệu nhiều CV dùng key `cv-atelier:workspace:v1`, model collection schema 1; mỗi CV bên trong vẫn dùng schema 2. Key `cv-atelier:v2` / `cv-atelier:v1` cũ được giữ nguyên và không cập nhật ngược sau nâng cấp.
 
-1. Giải nén ZIP, mở terminal trong thư mục `CV-Atelier_v1.3.1` có `package.json`.
-2. Cài Node.js 22 hoặc 24 LTS.
-3. Chạy:
+Nếu bản lưu mới hỏng, app không tự thay bằng mẫu hoặc fallback về bản cũ. Có nút tải bản lưu gốc, nhập JSON hoặc chủ động dùng mẫu mới. Trước ghi đè bản hỏng theo lựa chọn của người dùng, app cố giữ nguyên bản gốc ở key phục hồi; nếu không bảo toàn được thì từ chối ghi đè.
+
+Khi tab khác cập nhật, app dừng ghi và hiển thị **Sao lưu tất cả bản đang có / Nạp bản đã lưu**. Bản sao lưu giữ các chỉnh sửa đang có trong phiên hiện tại. Cơ chế kiểm tra phiên bản trước ghi giúp phát hiện ghi từ dữ liệu cũ; đây là lưu trữ cục bộ, không phải hệ thống cộng tác hay khóa phân tán.
+
+**Quay lại v1.3.1:** dùng deployment/commit cũ và backup JSON cũ trước nâng cấp. Bản cũ chỉ thấy key v1/v2 ở thời điểm nâng cấp, không thấy các chỉnh sửa/nhiều CV/lịch sử trong collection mới. Backup v1.4 phải nhập bằng v1.4; giữ tệp đó để dùng lại khi nâng cấp trở lại. Không xóa dữ liệu trình duyệt để rollback.
+
+Local storage tách theo trình duyệt/domain. Chế độ ẩn danh, xóa dữ liệu web hoặc đổi máy có thể mất hồ sơ; JSON dùng để chuyển máy. Chưa có đăng nhập, database hay đồng bộ cloud trong v1.4.0.
+
+## 3. Dữ liệu mẫu
+
+Nông Thị Hồng Cúc; ASC từ 12/12/2022 đến nay; 8 tháng làm phần mềm HRM; đơn vị dự án VLU, NTT, DNTU, NDUN, HNIVC, HDIU, TLU, IUH. ASC là đơn vị công tác, tám trường là đơn vị dự án. Không tự coi đó là tám nơi từng làm việc.
+
+Chức danh/nhiệm vụ, giới thiệu và mục tiêu cần ứng viên xác nhận. Không tạo số liệu, thành tích, học vấn/chứng chỉ hoặc liên hệ chưa được cung cấp. Ảnh để trống. Mục trống được bỏ khỏi CV. Nếu còn kinh nghiệm/dự án chưa xác nhận, ghi chú bản nháp được giữ kể cả đã tắt tùy chọn bản nháp thủ công.
+
+## 4. Công nghệ và chạy local
+
+HTML/CSS và JavaScript ES Modules; Node.js 22 trở lên cho dev/build/tests. Giữ vendor pdf-lib 1.17.1, fontkit 1.1.1 và DejaVu fonts từ bản trước, không cần CDN/API key/backend. Xem `THIRD_PARTY.md` và giấy phép tài nguyên.
+
+Giải nén, mở terminal trong thư mục `CV-Atelier_v1.4.0` có `package.json`:
 
 ```bash
 npm ci
 npm run dev
 ```
 
-Mở `http://localhost:3000`. Dừng bằng Ctrl+C. Không mở source `index.html` trực tiếp bằng `file://` vì ES Modules và font cần HTTP.
-
-Kiểm tra/build:
+Mở `http://localhost:3000`, dừng bằng Ctrl+C. Không mở source qua `file://` vì module/font cần HTTP.
 
 ```bash
 npm run check
@@ -103,73 +101,48 @@ npm test
 npm run build
 ```
 
-Build tạo `dist/` từ `public/`. Không sửa `dist/` vì lần build sau sẽ tạo lại. `npm ci` không cần cài dependency runtime từ mạng; tài nguyên đã nằm trong source. Tests PDF ghi file kiểm tra vào thư mục tạm hệ thống, không đóng vào source.
+Build sao chép `public/` sang `dist/`. Không sửa `dist/`. Tests PDF ghi file QA vào thư mục tạm; đặt `CV_QA_DIR` để chọn nơi kiểm tra. Không có biến môi trường cần cấu hình cho app; không cần `.env`, Docker hoặc Supabase.
 
-## 5. Cách sử dụng
+| Thành phần | Vai trò |
+| --- | --- |
+| `public/model.js`, `legacy-model.js` | CV schema 2, Unicode NFC, nội dung/xác nhận và migration v1 |
+| `public/workspace.js` | Nhiều CV, phiên bản, assets, backup, so sánh, kiểm tra trước lưu |
+| `public/portfolio-ui.js` | Danh sách CV, đặt tên, so sánh, khôi phục và lưu trữ |
+| `public/app.js` | Editor, IME, thao tác và tích hợp collection |
+| `public/document.js`, `modern-one.js`, `templates.js` | Mẫu/hình học chung SVG và PDF |
+| `public/landing.js`, `export.js` | Landing và HTML cùng trang SVG A4 |
+| `public/photo-grayscale.js` | Ảnh đen trắng khi xuất, giữ ảnh gốc |
+| `public/storage.js` | Utility đọc/ghi đơn CV cũ phục vụ tương thích/tests; app mới dùng workspace |
+| `public/fonts`, `vendor` | Font/runtime local và giấy phép |
+| `scripts`, `tests` | Server/build/check và regression tests |
 
-1. Điền tên, vị trí, liên hệ, học vấn; sửa nhiệm vụ theo thực tế.
-2. Vào Kinh nghiệm: bổ sung kết quả nếu có căn cứ; xác nhận từng mục sau rà soát.
-3. Vào Dự án: bổ sung vai trò, phạm vi và đóng góp cho dự án tiêu biểu nếu cần.
-4. Chọn mẫu CV, sau đó dùng Kiểu dáng để chỉnh màu, font, lề, mật độ và ảnh. Kéo mục hoặc dùng mũi tên để sắp xếp **CV A4**. Landing page giữ trình tự giới thiệu phù hợp trang web.
-5. Dùng Rà soát nội dung để kiểm tra trường còn thiếu; gợi ý chỉ thay nội dung sau khi bấm áp dụng, có thể hoàn tác.
-6. Chọn **Xuất hồ sơ → Tải PDF A4 / Tải CV HTML / Tải landing page → Tải tệp xuống**. Bước cuối là liên kết tải thật để trình duyệt xử lý yêu cầu tải do người dùng chủ động bấm.
-7. Dùng Sao lưu JSON trước khi chuyển thiết bị hoặc xóa dữ liệu trình duyệt.
+## 5. Cách dùng nhanh
 
-Ảnh HEIC cần đổi sang JPEG/PNG/WebP trước. Nếu PDF cảnh báo ký tự chưa có trong font, kiểm tra và thay các ký hiệu/emoji hiếm; bộ font tập trung vào tiếng Việt và chữ thông dụng.
+1. Rà thông tin cá nhân, nhiệm vụ/kết quả; xác nhận nội dung có thật.
+2. Vào **CV của tôi → Nhân bản**, đặt tên/trường/vị trí cho mỗi bản ứng tuyển.
+3. Chọn CV trên thanh **Đang chỉnh sửa**; chỉnh nội dung/mẫu/ảnh theo từng bản.
+4. Bấm **Lưu phiên bản** khi hoàn tất một lần rà soát hoặc trước khi gửi.
+5. Dùng **So sánh** và **Khôi phục** trong lịch sử nếu cần. Muốn ẩn CV đã dùng, chọn Lưu trữ.
+6. Chuyển **CV A4 / Landing page** để xem cùng mẫu; Landing tự co theo màn hình.
+7. **Xuất hồ sơ → Tải PDF A4 / CV HTML / Landing page → Tải tệp xuống**.
+8. Tải Sao lưu tất cả định kỳ và trước thay domain/thiết bị.
 
-Khi in bằng trình duyệt: chọn A4, lề None/mặc định theo CSS, scale 100%, tắt header/footer của trình duyệt. PDF tải trực tiếp không cần thiết lập này.
+Ảnh JPEG/PNG/WebP dưới 8 MB và 40 megapixel, tối ưu tại thiết bị. HEIC cần chuyển trước. Ký tự hiếm ngoài font có cảnh báo; kiểm tra PDF trước khi gửi. In trình duyệt: A4, scale 100%, tắt header/footer và dùng lề theo CSS. PDF trực tiếp không cần cài đặt hộp thoại in.
 
-## 6. Dữ liệu, nâng cấp và khôi phục
+## 6. Push GitHub
 
-- Bản này lưu **riêng trong trình duyệt + tên miền hiện tại**, không phải database hoặc đồng bộ nhiều máy.
-- Giữ schema 2 và key v2 từ v1.3.0; v1.3.1 thêm giá trị template `modern1`, giữ nguyên nội dung và mẫu đã chọn. Hồ sơ mới dùng `modern1` và font tiêu đề modern. V1/v2 cũ thiếu trường mẫu vẫn nâng cấp sang Academic như trước.
-- Từ v1.3.0 đã thêm `design.template` và `design.monochrome` có giá trị mặc định khi đọc dữ liệu cũ. Backup v1.3.0 vẫn giữ tất cả trường cũ.
-- Key v1: `cv-atelier:v1`; key mới: `cv-atelier:v2`. Lần đầu mở bản mới, nếu chưa có v2 thì đọc và nâng cấp v1, giữ nguyên key v1. JSON backup v1 nhập được.
-- Dữ liệu lỗi không bị tự động ghi đè bằng mẫu. Thông báo phục hồi cho tải bản lưu gốc / khôi phục JSON / chủ động dùng mẫu mới.
-- Hết quota hoặc bị chặn storage: trạng thái lưu báo lỗi; giữ bản đang sửa trong bộ nhớ và cho tải sao lưu. Không tự xóa bản cũ để lấy dung lượng.
-- Khi tab khác cập nhật hồ sơ, dừng ghi đè và yêu cầu sao lưu bản đang chỉnh hoặc nạp bản đã lưu.
-- Xóa dữ liệu trình duyệt có thể mất hồ sơ. Chế độ ẩn danh, trình duyệt khác hoặc tên miền mới không chia sẻ localStorage; dùng JSON để chuyển dữ liệu.
-- Hoàn tác/làm lại chỉ trong phiên đang mở, không phải lịch sử snapshot lâu dài. Lịch sử nhiều hồ sơ thuộc roadmap sau.
-
-**Trước nâng cấp:** mở bản cũ → Sao lưu JSON → giữ ZIP/commit cũ → cập nhật source → deploy cùng domain → mở bản mới → kiểm tra dữ liệu. Nếu đổi domain, khôi phục JSON. Không cần reset hoặc xóa cache dữ liệu ứng viên.
-
-**Quay lại v1.3.0:** sao lưu JSON v1.3.1, chuyển sang Academic/Modern Professional/Classic trước khi dùng deployment cũ. V1.3.0 không nhận giá trị `modern1`; bản backup mới cần giữ để dùng lại khi nâng cấp. Không xóa localStorage để rollback.
-
-**Quay lại v1.2.0:** dùng deployment/commit v1.2.0 và giữ JSON v1.3.0. Bản v1.2.0 có thể bỏ trường mẫu mới khi lưu; giữ backup để khôi phục lựa chọn nếu nâng cấp lại.
-
-**Quay lại v1:** dùng deployment/commit cũ. Key v1 vẫn được giữ, nhưng các chỉnh sửa chỉ có trong schema v2 không tự chuyển ngược thành v1; giữ backup v2 để dùng lại khi quay về v1.3.0. Không xóa key v2 để rollback.
-
-Giữ nguyên `schemaVersion` và các trường không sửa khi chỉnh JSON thủ công. Khi cần hỗ trợ, gửi ZIP mới nhất và JSON backup mong muốn giữ.
-
-## 7. Xuất bản nội dung đã chỉnh
-
-Sửa trong editor **không tự push GitHub hoặc cập nhật nội dung cho người khác**. Mỗi trình duyệt có bản local riêng. Chưa có đăng nhập quản trị hay database trong v1.3.1.
-
-- Muốn công khai bản chỉ xem: xuất Landing HTML, đổi tên thành `index.html`, deploy trên **repo riêng**; file đã chứa font và ảnh, không cần build. Không ghi đè app Studio nếu muốn giữ công cụ chỉnh sửa.
-- Muốn đổi mẫu mặc định của app: sao lưu JSON v2, dùng dữ liệu đó làm `defaults` trong `public/model.js` (giữ các hàm và hằng số), rồi check/test/build/push. Nên gửi JSON + ZIP để được cập nhật đúng source khi chưa quen sửa mã.
-- Trình duyệt đã có hồ sơ local tiếp tục ưu tiên bản local. Chỉ chọn Đặt lại mẫu khi đã sao lưu và chủ động muốn thay hồ sơ đang có.
-- Đăng nhập và đồng bộ nội dung xuất bản là hạng mục tương lai; không đưa token GitHub/Vercel vào frontend để giả lập quản trị.
-
-## 8. Push GitHub
-
-### Repository mới
-
-Tạo repo trống trên tài khoản của Boss; sau đó chạy trong thư mục source:
+Repo mới, tạo repository trống trước; chạy trong thư mục source:
 
 ```bash
 git init
 git branch -M main
 git add .
-git commit -m "feat: release CV Atelier v1.3.1"
+git commit -m "feat: release CV Atelier v1.4.0"
 git remote add origin https://github.com/YOUR_OWNER/YOUR_REPO.git
 git push -u origin main
 ```
 
-Thay owner/repo bằng đích thực tế. Không đưa PAT, secret hoặc `.env` thật vào ZIP/Git.
-
-### Repository đã có source
-
-Clone hoặc mở checkout đúng repo trước khi chép source mới. Giữ công việc riêng của Boss và tích hợp thay đổi, không dùng force push.
+Repo có source: clone/fetch trước khi chép bản mới; giữ thay đổi riêng của Boss.
 
 ```bash
 git clone https://github.com/YOUR_OWNER/YOUR_REPO.git
@@ -178,7 +151,7 @@ git fetch origin
 git status
 ```
 
-Chép các file v1.3.1 vào đúng thư mục dự án, rồi:
+Chép source v1.4.0 vào đúng thư mục dự án, rồi:
 
 ```bash
 npm ci
@@ -186,16 +159,16 @@ npm run check
 npm test
 npm run build
 git add .
-git commit -m "feat: upgrade CV Atelier to v1.3.1"
+git commit -m "feat: upgrade CV Atelier to v1.4.0"
 git pull --rebase origin main
 git push origin main
 ```
 
-Nếu có conflict: sửa, kiểm tra, `git add` các file đã giải quyết, `git rebase --continue`. Không bỏ qua kiểm tra khi gặp `fetch first`.
+Nếu conflict: sửa, kiểm tra, `git add` và `git rebase --continue`. Không force push để giải quyết `fetch first`. Không commit `.env`, token, node_modules hoặc dữ liệu cá nhân. Backup JSON giữ ngoài repo công khai.
 
-## 9. Deploy Vercel
+## 7. Deploy Vercel
 
-Boss tự deploy theo lựa chọn hiện tại. Không cần biến môi trường, API key, database hoặc callback ở bản này.
+Boss tự deploy; không cần biến môi trường/database.
 
 | Thiết lập | Giá trị |
 | --- | --- |
@@ -205,30 +178,28 @@ Boss tự deploy theo lựa chọn hiện tại. Không cần biến môi trư�
 | Build Command | `npm run build` |
 | Output Directory | `dist` |
 | Node.js | 22.x hoặc 24.x |
-| Production Branch | `main`, hoặc branch Boss cấu hình cho project |
+| Production Branch | `main` hoặc branch Boss đã cấu hình |
 | Environment Variables | Không cần |
 
-Lần đầu: Vercel → Add New Project → import repo GitHub → cấu hình như bảng → Deploy → kiểm tra Ready và URL thật. Nếu đã có project, giữ Root/Build/Output đúng, rồi push lên Production Branch hoặc tạo deployment từ nhánh đó trong Deployments. `vercel.json` đã đi kèm.
+Import repo GitHub vào project Vercel, kiểm tra bảng cấu hình, Deploy và chờ Ready. Với project có sẵn, giữ Root/Build/Output đúng và push Production Branch. Những lần sau Git Integration kết nối sẽ deploy theo push.
 
-Kiểm tra sau deploy: font tải được; tên có dấu hiển thị đúng; sửa và F5 giữ dữ liệu; xuất PDF; tải HTML; thử nhập backup và ảnh trên máy của Boss. Các lần sau push branch sản xuất sẽ kích hoạt deploy nếu Git Integration đang kết nối.
+Sau deploy: kiểm tra v1.4.0, CV cũ được chuyển đúng; nhân bản/chỉnh một CV/chuyển lại CV gốc; tải lại giữ dữ liệu; thử phiên bản/so sánh/khôi phục; Landing khớp A4 ở bốn mẫu; xuất PDF/HTML, chọn ảnh và nhập backup trên máy Boss.
 
-Không có database/migration SQL; không thêm Supabase hoặc dịch vụ trả phí chỉ để deploy bản này. Nếu sau này cần tài khoản và đồng bộ, thiết kế thêm backend theo roadmap.
+Muốn xuất bản hồ sơ chỉ xem: xuất Landing HTML, đổi tên `index.html`, deploy ở repo riêng; file tự chứa font/ảnh, không cần build. Nội dung editor không tự push hoặc cập nhật cho người khác. Đồng bộ/đăng nhập thuộc v1.5.0 đề xuất.
 
-## 10. Xử lý lỗi
+## 8. Xử lý lỗi
 
 | Hiện tượng | Cách xử lý |
 | --- | --- |
-| Chưa tải được font/PDF | Kiểm tra `public/fonts`, `public/vendor` đã push đủ; build và Root Directory đúng; không mở source bằng file:// |
-| Không thấy mẫu mới | Kiểm tra version v1.3.1, vào Mẫu CV chuyên nghiệp; deploy đủ `templates.js`, `modern-one.js` và `photo-grayscale.js` |
-| Không chuyển được mục sang cột khác | Academic có phân cột cố định; đổi thứ tự trong cột hoặc chọn mẫu một cột |
-| Font cũ vẫn xuất hiện | Kiểm tra version v1.3.1 trên giao diện, deployment mới và tải lại trang; không xóa dữ liệu hồ sơ |
-| Dấu Unicode tổ hợp | App chuẩn hóa NFC khi nhận, lưu và xuất; chờ hoàn tất bộ gõ trước khi chuyển trường |
-| PDF nhiều trang | Rút gọn nội dung hoặc chỉnh lề/mật độ; zoom không làm PDF ngắn đi |
-| File chưa tải | Sau khi tạo tệp, bấm liên kết Tải tệp xuống; kiểm tra mục Downloads của trình duyệt |
-| Không đọc được ảnh | Chọn JPEG/PNG/WebP đúng định dạng, dưới 8 MB và 40 megapixel |
-| Không lưu được | Đọc trạng thái lỗi, tải Sao lưu; dùng cửa sổ thường và kiểm tra storage của website |
-| Không thấy thay đổi trên thiết bị khác | Dữ liệu local; nhập JSON hoặc xuất bản lại HTML |
-| Chưa bỏ được ghi chú bản nháp | Rà soát và xác nhận từng mục kinh nghiệm/dự án, sau đó tắt ghi chú thủ công nếu phù hợp |
-| Muốn quay lại | Dùng deployment/commit trước, giữ cả JSON v2 và dữ liệu local hiện có |
+| Landing còn ảnh vòm/hero cũ | Kiểm tra deployment v1.4.0 và đã push đủ `landing.js`, `export.js`, CSS; tải lại app, không xóa dữ liệu hồ sơ |
+| Không thấy CV đã chỉnh | Kiểm tra CV đang chọn, domain/trình duyệt; nhập Sao lưu nếu đã đổi máy |
+| Hết dung lượng / không lưu | Tải Sao lưu tất cả ngay; lỗi không tự xóa hồ sơ hoặc ghi đè bản đã lưu |
+| Có thay đổi ở tab khác | Sao lưu phiên đang sửa rồi Nạp bản đã lưu; không tiếp tục ghi đè từ tab cũ |
+| Nhập JSON lỗi | Dùng backup v1.4 hoặc JSON v1/v2 đúng định dạng; tối đa 32 MB và không vượt 30 CV sau nhập |
+| Đủ mốc được giữ | Tải backup rồi xóa mốc không cần; app cần chỗ lưu hiện trạng trước khôi phục |
+| File chưa tải | Sau tạo file, bấm Tải tệp xuống và kiểm tra Downloads |
+| PDF nhiều trang | Rút gọn hoặc chỉnh lề/mật độ; zoom xem không làm PDF ngắn hơn |
+| Còn ghi chú bản nháp | Rà soát/xác nhận kinh nghiệm và dự án, rồi tắt ghi chú thủ công nếu phù hợp |
+| Không đổi được cột Academic | Mẫu phân cột cố định; sắp xếp trong cột hoặc chọn mẫu một cột |
 
-Chi tiết kiểm tra và giới hạn: `VERIFICATION.md`. Roadmap tiếp theo: `ROADMAP.md`.
+Giới hạn QA thực tế: `VERIFICATION.md`. Kế hoạch tiếp: `ROADMAP.md`. Khi muốn nâng cấp, gửi ZIP mới nhất và JSON backup nếu cần giữ nội dung cá nhân.

@@ -2,7 +2,7 @@ import {
   defaults as legacyDefaults,
   validateData as validateLegacy,
 } from "./legacy-model.js";
-export const VERSION = "1.3.1";
+export const VERSION = "1.4.0";
 export const STORAGE_KEY = "cv-atelier:v2";
 export const LEGACY_KEY = "cv-atelier:v1";
 export const SECTIONS = {

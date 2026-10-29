@@ -1,6 +1,6 @@
 # Roadmap
 
-Bản hiện tại **v1.3.1**, nâng cấp từ source v1.3.0. Phạm vi Reliability, Studio và Professional Content của các bản trước được giữ.
+Bản hiện tại **v1.4.0**, nâng cấp từ source v1.3.1 Boss cung cấp. Phạm vi Reliability, Studio và Professional Content của các bản trước được giữ.
 
 | Phiên bản | Mục tiêu | Chức năng chính | Công việc kỹ thuật và dữ liệu | Điều kiện hoàn thành | Phụ thuộc và thứ tự |
 | --- | --- | --- | --- | --- | --- |
@@ -10,9 +10,9 @@ Bản hiện tại **v1.3.1**, nâng cấp từ source v1.3.0. Phạm vi Reliabi
 | v1.2.0 | Nội dung chuyên nghiệp | Tóm tắt, nhiệm vụ/kết quả, dự án/vai trò, nhóm kỹ năng, gợi ý vị trí, xác nhận | Model/editor mở rộng, migrate v1, gợi ý bằng quy tắc | Dữ liệu tách công ty/dự án; xác nhận bỏ khi sửa; backup round-trip | Hoàn thành source; người dùng tự push/deploy |
 | v1.3.0 | Nhiều mẫu CV chuyên nghiệp | Academic Executive, Modern Professional, Classic ATS; xem trước đen trắng; đổi mẫu giữ dữ liệu | Template registry dùng chung model/layout; kiểm tra thứ tự đọc PDF | Đổi mẫu không mất nội dung; không hứa mọi ATS tương thích | Hoàn thành source trong gói v1.3.0; Boss tự push/deploy |
 | v1.3.1 | Layout theo mẫu Boss chọn | Modern 1 ảnh tròn, liên hệ hai cột, kinh nghiệm theo hàng; PDF/HTML theo layout | Renderer riêng tạo token vector chung; schema 2 bổ sung enum modern1, không đổi dữ liệu cũ | Mặc định 1 trang; hàng dài không đè nhau; ảnh tròn SVG/PDF; 39 tests đạt | Hoàn thành source, Boss tự push/deploy |
-| v1.4.0 — đề xuất | Nhiều hồ sơ và lịch sử | Nhân bản theo vị trí/trường, snapshot, khôi phục, so sánh thay đổi | Kho local nhiều hồ sơ; migration, quản lý ảnh/dung lượng | Các hồ sơ độc lập, backup/restore từng hoặc toàn bộ | Sau luồng đơn hồ sơ ổn định |
+| v1.4.0 | Nhiều CV & Recovery; thống nhất A4/Web | Tạo/nhân bản theo trường/vị trí, mốc có tên, lịch sử/so sánh/khôi phục, lưu trữ; Landing theo mẫu A4 | Collection schema 1, giữ CV schema 2 và key cũ, dedup ảnh, backup/nhập bản sao, kiểm tra trước ghi, renderer dùng chung | CV độc lập; history/backup phục hồi; bốn mẫu web/A4/PDF khớp; regression và UI đạt | Hoàn thành source; Boss tự push/deploy |
 | v1.5.0 — đề xuất | Xuất bản và đồng bộ | Đăng nhập chủ hồ sơ, draft/published, link chỉ xem, nhiều thiết bị | Backend/Auth/Storage, kiểm tra quyền server, backup/revision | Khách không sửa/đọc draft, chủ hồ sơ đồng bộ được | Cần chọn kết nối; chưa có trong bản này |
 
-## Đề xuất tiếp theo: v1.4.0
+## Đề xuất tiếp theo: v1.5.0 — Publishing & Sync
 
-Quản lý nhiều CV theo trường/vị trí: nhân bản hồ sơ, đặt tên phiên bản, snapshot trước khi sửa, khôi phục và so sánh thay đổi. Dữ liệu từng hồ sơ độc lập, có backup từng hồ sơ/toàn bộ và migration giữ CV hiện tại. Chưa triển khai; chờ Boss chọn.
+Đăng nhập chủ hồ sơ, bản nháp/bản công khai và link chỉ xem, đồng bộ nhiều thiết bị; thiết kế backend/Auth/Storage cùng quyền server và lịch sử an toàn. Chưa triển khai. Cần chọn dịch vụ/kết nối và luồng xuất bản trước khi xây dựng; dữ liệu v1.4 vẫn local.

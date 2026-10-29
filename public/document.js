@@ -923,7 +923,7 @@ export async function createPDF(data, { PDFLib, fontkit, fontBytes }) {
   doc.registerFontkit(fontkit);
   doc.setTitle(data.profile.name + " - " + data.profile.role);
   doc.setAuthor(data.profile.name);
-  doc.setCreator("CV Atelier v1.3.1");
+  doc.setCreator("CV Atelier v1.4.0");
   const embedded = {};
   for (const [key, bytes] of Object.entries(fontBytes))
     embedded[key] = await doc.embedFont(bytes, {

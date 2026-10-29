@@ -15,7 +15,17 @@ import {
   TARGETS,
   isDraft,
 } from "./model.js";
-import { loadData, saveData } from "./storage.js";
+import {
+  WORKSPACE_KEY,
+  loadWorkspace,
+  commitWorkspace,
+  activeCV,
+  saveActive,
+  selectCV,
+  exportBackup,
+  mergeBackup,
+} from "./workspace.js";
+import { createPortfolioUI } from "./portfolio-ui.js";
 import {
   PAGE,
   PALETTES,
@@ -41,8 +51,13 @@ try {
     },
   };
 }
-const loaded = loadData(store);
-let data = loaded.data,
+const loaded = loadWorkspace(store);
+let portfolio = loaded.workspace,
+  savedToken = loaded.token,
+  portfolioUI,
+  workspaceBusy = false,
+  blockReason = loaded.error ? "corrupt" : null;
+let data = clone(activeCV(portfolio).data),
   blockedSave = Boolean(loaded.error),
   group = "profile",
   mode = "studio",
@@ -115,12 +130,21 @@ function persist() {
     return false;
   }
   try {
-    saveData(store, data);
+    if (!dirty && savedToken !== null) return true;
+    const committed = commitWorkspace(
+      store,
+      saveActive(portfolio, data),
+      savedToken,
+    );
+    portfolio = committed.workspace;
+    savedToken = committed.token;
+    portfolioUI?.renderStrip();
     dirty = false;
     lastSaveError = "";
     status("Đã lưu trên trình duyệt");
     return true;
   } catch (error) {
+    if (error.name === "ConflictError") showConflict();
     dirty = true;
     status("Chưa lưu · hãy sao lưu", true);
     $("#saveStatus").title = error.message;
@@ -202,7 +226,7 @@ function renderForm() {
   $("#groupSelect").value = group;
   if (group === "profile")
     $("#form").innerHTML =
-      `<p class="form-help">Bấm vào nội dung trên trang A4 để chỉnh nhanh. Thay đổi hiển thị ngay và được lưu trên trình duyệt.</p>${field("Họ và tên", "profile.name", p.name)}${field("Vị trí ứng tuyển", "profile.role", p.role)}${field("Tóm tắt chuyên môn", "profile.summary", p.summary, { area: true, rows: 5, help: "Ưu tiên 3–5 dòng, kinh nghiệm liên quan và giá trị phù hợp vị trí." })}${field("Điện thoại", "profile.phone", p.phone, { type: "tel" })}${field("Email", "profile.email", p.email, { type: "email" })}${field("Địa chỉ", "profile.address", p.address)}<hr class="form-divider"><h3 class="form-title">Ảnh đại diện</h3>${p.photo ? `<img class="photo-mini" src="${esc(p.photo)}" alt="Ảnh đại diện">` : ""}<div class="upload-actions"><button class="small-button" data-action="upload">${p.photo ? "Thay ảnh" : "Tải ảnh lên"}</button>${p.photo ? '<button class="small-button" data-action="removePhoto">Xóa ảnh</button>' : ""}</div><p class="form-help">JPEG, PNG, WebP · tối đa 8 MB. Ảnh được xử lý trên thiết bị, không gửi đến máy chủ.</p>${check("Hiển thị ảnh / khung ảnh trên CV", "design.photoVisible", d.photoVisible)}${p.photo ? `${field("Căn ngang (%)", "profile.photoX", p.photoX, { type: "range", min: 0, max: 100 })}${field("Căn dọc (%)", "profile.photoY", p.photoY, { type: "range", min: 0, max: 100 })}${field("Phóng ảnh", "design.photoZoom", d.photoZoom, { type: "range", min: 1, max: 2.5, step: 0.05 })}` : ""}<hr class="form-divider">${field("Mục tiêu nghề nghiệp", "profile.goal", p.goal, { area: true, rows: 4 })}${field("Nhãn trên landing page", "profile.eyebrow", p.eyebrow)}${field("Thông điệp cá nhân", "profile.tagline", p.tagline, { area: true, rows: 2 })}`;
+      `<p class="form-help">Bấm vào nội dung trên trang A4 để chỉnh nhanh. Thay đổi hiển thị ngay và được lưu trên trình duyệt.</p>${field("Họ và tên", "profile.name", p.name)}${field("Vị trí ứng tuyển", "profile.role", p.role)}${field("Tóm tắt chuyên môn", "profile.summary", p.summary, { area: true, rows: 5, help: "Ưu tiên 3–5 dòng, kinh nghiệm liên quan và giá trị phù hợp vị trí." })}${field("Điện thoại", "profile.phone", p.phone, { type: "tel" })}${field("Email", "profile.email", p.email, { type: "email" })}${field("Địa chỉ", "profile.address", p.address)}<hr class="form-divider"><h3 class="form-title">Ảnh đại diện</h3>${p.photo ? `<img class="photo-mini" src="${esc(p.photo)}" alt="Ảnh đại diện">` : ""}<div class="upload-actions"><button class="small-button" data-action="upload">${p.photo ? "Thay ảnh" : "Tải ảnh lên"}</button>${p.photo ? '<button class="small-button" data-action="removePhoto">Xóa ảnh</button>' : ""}</div><p class="form-help">JPEG, PNG, WebP · tối đa 8 MB. Ảnh được xử lý trên thiết bị, không gửi đến máy chủ.</p>${check("Hiển thị ảnh / khung ảnh trên CV", "design.photoVisible", d.photoVisible)}${p.photo ? `${field("Căn ngang (%)", "profile.photoX", p.photoX, { type: "range", min: 0, max: 100 })}${field("Căn dọc (%)", "profile.photoY", p.photoY, { type: "range", min: 0, max: 100 })}${field("Phóng ảnh", "design.photoZoom", d.photoZoom, { type: "range", min: 1, max: 2.5, step: 0.05 })}` : ""}<hr class="form-divider">${field("Mục tiêu nghề nghiệp", "profile.goal", p.goal, { area: true, rows: 4 })}${field("Nhãn đầu hồ sơ (Academic)", "profile.eyebrow", p.eyebrow)}${field("Thông điệp cá nhân (Academic)", "profile.tagline", p.tagline, { area: true, rows: 2 })}`;
   if (group === "experience")
     $("#form").innerHTML =
       `<p class="form-help">Chỉ liệt kê công ty / đơn vị từng công tác. Các trường đã tham gia dự án được trình bày riêng ở mục Dự án.</p>${data.experiences.map((e, i) => `<article class="form-card"><div class="form-card-head"><b>KINH NGHIỆM ${i + 1}</b><button class="delete" data-action="removeExperience" data-index="${i}">Xóa mục</button></div>${field("Công ty / đơn vị công tác", `experiences.${i}.company`, e.company)}${field("Chức danh / mảng công việc", `experiences.${i}.role`, e.role)}${field("Thời gian", `experiences.${i}.period`, e.period)}${field("Phạm vi công việc", `experiences.${i}.description`, e.description, { area: true, rows: 2 })}${field("Nhiệm vụ", `experiences.${i}.bullets`, e.bullets, { area: true, list: true, rows: 5, help: "Mỗi dòng một ý. Chỉ mô tả công việc thực tế." })}${field("Kết quả / đóng góp", `experiences.${i}.results`, e.results, { area: true, list: true, rows: 3, help: "Để trống khi chưa có dữ liệu; không tự tạo số liệu thành tích." })}${check("Tôi đã rà soát và xác nhận nội dung mục này", `experiences.${i}.confirmed`, e.confirmed)}</article>`).join("")}<button class="add-item" data-action="addExperience">+ Thêm kinh nghiệm</button>`;
@@ -271,13 +295,13 @@ function paintPages() {
   $("#pages").innerHTML = layout.pages
     .map(
       (_, i) =>
-        `<article class="page-wrap" style="width:${w}px;height:${h}px">${renderSVG(layout, i)}<span class="page-label">TRANG ${i + 1} / ${layout.pages.length}</span></article>`,
+        `<article class="page-wrap" style="width:${w}px;height:${h}px">${renderSVG(layout, i, { idPrefix: "studio" })}<span class="page-label">TRANG ${i + 1} / ${layout.pages.length}</span></article>`,
     )
     .join("");
   $("#printOutput").innerHTML = layout.pages
     .map(
       (_, i) =>
-        `<article class="print-page">${renderSVG(layout, i, { editable: false })}</article>`,
+        `<article class="print-page">${renderSVG(layout, i, { editable: false, idPrefix: "print" })}</article>`,
     )
     .join("");
 }
@@ -338,10 +362,14 @@ function render() {
       '<div class="loading-card">Chưa thể dựng CV. Hãy rút gọn hoặc điều chỉnh nội dung.</div>';
     $("#pageCount").textContent = "Cần điều chỉnh nội dung";
     $("#printOutput").innerHTML = "";
+    $("#landing").innerHTML =
+      '<div class="loading-card">Cần điều chỉnh nội dung A4 trước khi xem.</div>';
   }
 }
 function paintLanding() {
-  $("#landing").innerHTML = renderLandingView(data);
+  $("#landing").innerHTML = layout
+    ? renderLandingView(data, { layout })
+    : '<div class="loading-card">Cần điều chỉnh nội dung A4 trước khi xem.</div>';
 }
 function setMode(next) {
   mode = next;
@@ -356,14 +384,18 @@ function setMode(next) {
   else paintPages();
 }
 function slug() {
-  return (data.profile.name || "ho-so")
+  return (
+    [activeCV(portfolio).name, activeCV(portfolio).school, data.profile.name]
+      .filter(Boolean)
+      .join("-") || "ho-so"
+  )
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[đĐ]/g, "d")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "")
-    .slice(0, 80);
+    .slice(0, 120);
 }
 function readyDownload(name, content, type) {
   if (blobURL) URL.revokeObjectURL(blobURL);
@@ -376,8 +408,8 @@ function readyDownload(name, content, type) {
 }
 function backup() {
   readyDownload(
-    "CV-Atelier-" + slug() + "-v1.3.1.json",
-    JSON.stringify(validateData(data), null, 2),
+    "CV-Atelier-" + slug() + "-v1.4.0.json",
+    JSON.stringify(exportBackup(draftWorkspace(), { scope: "cv" }), null, 2),
     "application/json;charset=utf-8",
   );
 }
@@ -438,8 +470,6 @@ async function exportFile(kind) {
       );
       const html = buildHTML(snapshot, docLayout, {
         fonts,
-        landing: renderLandingView(snapshot, { staticMode: true }),
-        landingCSS: env.landingCSS,
         mode: kind === "landing" ? "landing" : "cv",
       });
       readyDownload(
@@ -753,21 +783,8 @@ $("#jsonFile").onchange = async (e) => {
   const file = e.target.files[0];
   if (!file) return;
   try {
-    if (file.size > 3 * 1024 * 1024) throw Error("Tệp JSON tối đa 3 MB.");
-    const incoming = validateData(JSON.parse(await file.text()));
-    await preparePhoto(incoming.profile);
-    if (blockedSave) {
-      const raw = store.getItem(STORAGE_KEY);
-      if (raw) store.setItem(STORAGE_KEY + ":before-import:" + Date.now(), raw);
-    }
-    checkpoint();
-    data = incoming;
-    blockedSave = false;
-    $("#recoveryBanner").hidden = true;
-    queue();
-    render();
-    renderForm();
-    toast("Đã khôi phục hồ sơ. Có thể hoàn tác.");
+    if (file.size > 32 * 1024 * 1024) throw Error("Tệp JSON tối đa 32 MB.");
+    portfolioUI.previewImport(JSON.parse(await file.text()));
   } catch (error) {
     toast("Không nhập được tệp: " + error.message);
   } finally {
@@ -820,6 +837,9 @@ $("#exportOpen").onclick = () => {
   paintLanding();
   const issues = review(data);
   $("#exportReview").textContent =
+    "Hồ sơ: " +
+    activeCV(portfolio).name +
+    ". " +
     (isDraft(data) ? "Hồ sơ đang có nội dung chờ xác nhận. " : "") +
     (issues.length
       ? `Còn ${issues.length} mục cần rà soát. Bạn vẫn có thể xuất bản nháp.`
@@ -837,10 +857,20 @@ $("#print").onclick = () => {
   window.print();
 };
 $("#cancelReset").onclick = () => $("#resetDialog").close();
-$("#confirmReset").onclick = () => {
-  change(() => (data = clone(defaults)), { form: true });
-  $("#resetDialog").close();
-  toast("Đã đặt lại mẫu. Có thể hoàn tác trong phiên.");
+$("#confirmReset").onclick = async () => {
+  if (!persist()) return;
+  try {
+    if (
+      await applyWorkspace(
+        saveActive(portfolio, clone(defaults), { reason: "reset" }),
+      )
+    ) {
+      $("#resetDialog").close();
+      toast("Đã đặt lại CV này. Mốc trước đặt lại được giữ trong lịch sử.");
+    }
+  } catch (error) {
+    toast(error.message);
+  }
 };
 document.addEventListener("keydown", (e) => {
   if (e.isComposing || composing.has(e.target)) return;
@@ -864,66 +894,178 @@ window.addEventListener("beforeunload", (e) => {
     e.returnValue = "";
   }
 });
-window.addEventListener("storage", (e) => {
-  if (e.key === STORAGE_KEY) {
-    blockedSave = true;
-    const banner = $("#recoveryBanner");
-    banner.hidden = false;
-    banner.innerHTML =
-      'Hồ sơ đã thay đổi ở tab khác. Sao lưu phần đang chỉnh trước khi nạp bản mới. <button id="backupConflict">Sao lưu bản đang chỉnh</button><button id="loadConflict">Nạp bản đã lưu</button>';
-    $("#backupConflict").onclick = backup;
-    $("#loadConflict").onclick = () => {
-      const fresh = loadData(store);
-      if (fresh.error) {
-        toast(fresh.error);
-        return;
-      }
-      checkpoint();
-      data = fresh.data;
-      blockedSave = false;
-      dirty = false;
-      banner.hidden = true;
-      status("Đã nạp bản lưu mới");
-      render();
-      renderForm();
-    };
+function draftWorkspace() {
+  return saveActive(portfolio, data, { forceAuto: true });
+}
+function backupAll() {
+  try {
+    readyDownload(
+      "CV-Atelier-all-v1.4.0.json",
+      JSON.stringify(exportBackup(draftWorkspace()), null, 2),
+      "application/json;charset=utf-8",
+    );
+  } catch (e) {
+    toast("Không tạo được bản sao lưu: " + e.message);
   }
+}
+async function applyWorkspace(next, { recovery = false } = {}) {
+  if (workspaceBusy) return false;
+  if (blockedSave && !recovery) {
+    toast("Cần xử lý thông báo dữ liệu trước khi thay đổi danh sách CV.");
+    return false;
+  }
+  workspaceBusy = true;
+  $(".app-shell").setAttribute("inert", "");
+  try {
+    const target = activeCV(next);
+    if (
+      target.data.profile.photo &&
+      (!target.data.profile.photoWidth ||
+        target.data.profile.photo.startsWith("data:image/webp"))
+    )
+      await preparePhoto(target.data.profile);
+    const committed = commitWorkspace(store, next, savedToken),
+      changed =
+        JSON.stringify(activeCV(committed.workspace).data) !==
+        JSON.stringify(data),
+      switched = portfolio.activeId !== committed.workspace.activeId;
+    if (switched) {
+      history = [];
+      future = [];
+      lastEdit = "";
+    } else if (changed) checkpoint();
+    portfolio = committed.workspace;
+    savedToken = committed.token;
+    data = clone(activeCV(portfolio).data);
+    clearTimeout(saveTimer);
+    clearTimeout(renderTimer);
+    dirty = false;
+    blockedSave = false;
+    blockReason = null;
+    $("#recoveryBanner").hidden = true;
+    status("Đã lưu trên trình duyệt");
+    render();
+    renderForm();
+    updateHistory();
+    portfolioUI?.renderStrip();
+    return true;
+  } catch (error) {
+    if (error.name === "ConflictError") showConflict();
+    status("Chưa lưu thay đổi · hãy sao lưu", true);
+    toast(error.message);
+    return false;
+  } finally {
+    workspaceBusy = false;
+    $(".app-shell").removeAttribute("inert");
+  }
+}
+function preserveCorrupt() {
+  const raw = store.getItem(WORKSPACE_KEY);
+  if (raw !== savedToken)
+    throw Error("Dữ liệu đã thay đổi. Hãy nạp bản lưu mới trước.");
+  if (raw !== null)
+    store.setItem(WORKSPACE_KEY + ":recovery:" + Date.now(), raw);
+}
+async function importCopies(raw) {
+  if (blockedSave && blockReason === "conflict") {
+    toast("Hãy sao lưu bản đang chỉnh và nạp bản lưu mới trước khi nhập.");
+    return false;
+  }
+  try {
+    if (!blockedSave && !persist()) return false;
+    const next = mergeBackup(portfolio, raw);
+    if (blockedSave) preserveCorrupt();
+    return await applyWorkspace(next, { recovery: blockedSave });
+  } catch (e) {
+    toast(e.message);
+    return false;
+  }
+}
+function showConflict() {
+  blockedSave = true;
+  blockReason = "conflict";
+  dirty = true;
+  clearTimeout(saveTimer);
+  const banner = $("#recoveryBanner");
+  banner.hidden = false;
+  banner.innerHTML =
+    'Danh sách CV đã thay đổi ở tab khác. Sao lưu bản đang chỉnh trước khi nạp bản mới. <button id="backupConflict">Sao lưu tất cả bản đang có</button><button id="loadConflict">Nạp bản đã lưu</button>';
+  $("#backupConflict").onclick = backupAll;
+  $("#loadConflict").onclick = () => {
+    const fresh = loadWorkspace(store);
+    if (fresh.error) {
+      toast(fresh.error);
+      return;
+    }
+    portfolio = fresh.workspace;
+    savedToken = fresh.token;
+    data = clone(activeCV(portfolio).data);
+    history = [];
+    future = [];
+    lastEdit = "";
+    dirty = false;
+    blockedSave = false;
+    blockReason = null;
+    banner.hidden = true;
+    for (const dialog of document.querySelectorAll("dialog[open]"))
+      dialog.close();
+    render();
+    renderForm();
+    updateHistory();
+    portfolioUI.renderStrip();
+    status("Đã nạp danh sách CV mới");
+  };
+  status("Có thay đổi ở tab khác · chưa lưu", true);
+}
+window.addEventListener("storage", (e) => {
+  if (e.key === WORKSPACE_KEY || e.key === null) showConflict();
 });
 if (loaded.error) {
   const banner = $("#recoveryBanner");
   banner.hidden = false;
   banner.innerHTML =
-    'Không đọc được bản lưu. Dữ liệu cũ chưa bị ghi đè. Có thể khôi phục JSON hoặc dùng mẫu mới. <button id="downloadRaw">Tải bản lưu gốc</button><button id="useDefault">Dùng mẫu mới</button>';
+    'Không đọc được danh sách CV. Dữ liệu cũ chưa bị ghi đè. Có thể nhập sao lưu hoặc dùng mẫu mới. <button id="downloadRaw">Tải bản lưu gốc</button><button id="recoverImport">Nhập bản sao lưu</button><button id="useDefault">Dùng mẫu mới</button>';
   $("#downloadRaw").onclick = () => {
     try {
       readyDownload(
         "CV-Atelier-recovery.txt",
-        store.getItem(STORAGE_KEY) || store.getItem(LEGACY_KEY) || "",
+        store.getItem(WORKSPACE_KEY) ??
+          store.getItem(STORAGE_KEY) ??
+          store.getItem(LEGACY_KEY) ??
+          "",
         "text/plain;charset=utf-8",
       );
     } catch {
-      toast("Trình duyệt không cho đọc bộ nhớ.");
+      toast("Không đọc được bộ nhớ.");
     }
   };
-  $("#useDefault").onclick = () => {
+  $("#recoverImport").onclick = () => $("#jsonFile").click();
+  $("#useDefault").onclick = async () => {
     try {
-      const raw = store.getItem(STORAGE_KEY);
-      if (raw) store.setItem(STORAGE_KEY + ":recovery:" + Date.now(), raw);
-      blockedSave = false;
-      dirty = true;
-      if (persist()) banner.hidden = true;
-      else toast("Không lưu được. Có thể dùng Sao lưu để giữ dữ liệu.");
-    } catch {
-      toast("Chưa bảo toàn được bản cũ. Hãy tải bản lưu gốc trước.");
+      preserveCorrupt();
+      await applyWorkspace(portfolio, { recovery: true });
+    } catch (e) {
+      toast("Chưa bảo toàn được bản cũ. " + e.message);
     }
   };
   status("Chưa lưu · dữ liệu cũ được giữ", true);
 } else
   status(
     loaded.migrated
-      ? "Đã đọc hồ sơ v1 · đang nâng cấp"
+      ? "Đã đọc CV cũ · đang chuyển danh sách"
       : "Đã lưu trên trình duyệt",
   );
+portfolioUI = createPortfolioUI({
+  getWorkspace: () => portfolio,
+  ensureSaved: persist,
+  onCommit: applyWorkspace,
+  onImport: importCopies,
+  onBackupAll: backupAll,
+  onImportRequest: () => $("#jsonFile").click(),
+  notify: toast,
+});
+$("#cvManagerOpen").onclick = () => portfolioUI.open();
+portfolioUI.renderStrip();
 renderForm();
 renderRail();
 updateHistory();
@@ -937,13 +1079,10 @@ async function initialize() {
       if (!response.ok) throw Error("Không tải được font tiếng Việt.");
       fontBytes[key] = new Uint8Array(await response.arrayBuffer());
     }
-    const cssResponse = await fetch("./landing.css");
-    if (!cssResponse.ok) throw Error("Không tải được giao diện landing page.");
     await document.fonts.ready;
     env = {
       fontBytes,
       metrics: fontMetrics(window.fontkit, fontBytes),
-      landingCSS: await cssResponse.text(),
     };
     if (
       data.profile.photo &&
@@ -954,12 +1093,14 @@ async function initialize() {
       dirty = true;
     }
     render();
-    if ((loaded.migrated || dirty) && !blockedSave) {
+    if ((loaded.migrated || dirty || savedToken === null) && !blockedSave) {
       dirty = true;
       persist();
     }
     if (loaded.migrated)
-      toast("Đã nâng cấp hồ sơ v1; dữ liệu v1 gốc vẫn được giữ nguyên.");
+      toast(
+        "Đã chuyển CV cũ vào danh sách. Bản lưu v1/v2 gốc vẫn được giữ nguyên.",
+      );
   } catch (error) {
     $("#pages").innerHTML =
       `<div class="loading-card">${esc(error.message)}<br><button class="small-button" onclick="location.reload()">Tải lại trang</button></div>`;

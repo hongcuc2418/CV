@@ -380,3 +380,53 @@ test("Modern 1 has the same circular crop in SVG and a real PDF with PNG photo a
   await mkdir(output, { recursive: true });
   await writeFile(path.join(output, "modern1-photo.pdf"), result.bytes);
 });
+
+test("A4, Landing and exported web HTML share identical vector pages across every template and multiple pages", async () => {
+  const { renderLandingView } = await import("../public/landing.js");
+  const fonts = Object.fromEntries(
+    Object.entries(fontBytes).map(([k, v]) => [
+      k,
+      Buffer.from(v).toString("base64"),
+    ]),
+  );
+  const svg = (html) => html.match(/<svg[\s\S]*?<\/svg>/g) || [];
+  const clean = (s) =>
+    s
+      .replace(
+        /\s(?:data-edit|data-group|tabindex|role|aria-label)="[^"]*"/g,
+        "",
+      )
+      .replace(/\s+(\/?>)/g, "$1");
+  for (const template of Object.keys(TEMPLATES)) {
+    const d = clone(defaults);
+    d.design.template = template;
+    d.design.hiddenSections = ["skills"];
+    d.design.sectionOrder.reverse();
+    d.profile.photo = "data:image/png;base64,YWJj";
+    d.profile.photoX = 18;
+    d.profile.photoY = 73;
+    d.experiences[0].bullets = Array.from(
+      { length: 27 },
+      (_, i) =>
+        `Nhiệm vụ ${i + 1}: ` +
+        "Phối hợp công tác đào tạo và hướng dẫn người dùng. ".repeat(3),
+    );
+    const l = createLayout(d, metrics);
+    assert.ok(l.pages.length > 1);
+    const a4 = l.pages.map((_, i) =>
+      renderSVG(l, i, { editable: true, idPrefix: "export" }),
+    );
+    const landing = renderLandingView(d, {
+      layout: l,
+      staticMode: true,
+      idPrefix: "export",
+    });
+    const html = buildHTML(d, l, { fonts, mode: "landing" }),
+      cv = buildHTML(d, l, { fonts, mode: "cv" });
+    assert.deepEqual(a4.map(clean), svg(landing).map(clean), template);
+    assert.deepEqual(svg(html), svg(cv), template);
+    assert.deepEqual(svg(html), svg(landing), template);
+    assert.ok(!landing.includes("hero") && !html.includes("portrait-area"));
+    assert.ok(!html.includes("data-edit=") && !html.includes("<script"));
+  }
+});

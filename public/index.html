@@ -27,6 +27,14 @@
         ><button id="landingMode" aria-pressed="false">Landing page</button>
       </div>
       <div class="top-actions">
+        <button
+          id="cvManagerOpen"
+          class="cv-library-button"
+          aria-label="Quản lý CV"
+        >
+          <span aria-hidden="true">▤</span><b>CV của tôi</b
+          ><small id="cvCount">1</small>
+        </button>
         <span id="saveStatus" role="status">Đang mở hồ sơ…</span
         ><button id="undo" class="tool" aria-label="Hoàn tác" title="Hoàn tác">
           ↶</button
@@ -59,10 +67,15 @@
         </button>
         <div class="rail-footer">
           <span>© 2026 HuyVo. All rights reserved</span
-          ><small>v1.3.1 · Lưu riêng trên trình duyệt</small>
+          ><small>v1.4.0 · Lưu riêng trên trình duyệt</small>
         </div>
       </aside>
       <main id="workspace" class="workspace">
+        <div class="cv-switch-bar">
+          <label for="cvSwitcher">ĐANG CHỈNH SỬA</label
+          ><select id="cvSwitcher" aria-label="Hồ sơ đang chỉnh sửa"></select
+          ><span id="cvTarget"></span>
+        </div>
         <div class="canvas-toolbar">
           <div>
             <span class="canvas-label" id="canvasLabel">BẢN THIẾT KẾ A4</span
@@ -175,7 +188,9 @@
         <span class="file-badge">WEB</span
         ><span
           ><b>Tải landing page</b
-          ><small>Trang chỉ xem, kèm CV A4 khi in</small></span
+          ><small
+            >Trang chỉ xem dùng cùng mẫu, bố cục và số trang A4</small
+          ></span
         ><span>↓</span></button
       ><button id="print" class="print-link">In bằng trình duyệt</button>
       <p class="local-note">
@@ -186,8 +201,8 @@
     <dialog id="resetDialog">
       <h2>Đặt lại mẫu ban đầu?</h2>
       <p>
-        Hãy sao lưu trước nếu cần giữ nội dung. Có thể hoàn tác trong phiên hiện
-        tại.
+        Chỉ đặt lại CV đang mở. Hiện trạng được giữ thành một mốc trong lịch sử;
+        các CV khác không thay đổi.
       </p>
       <div class="dialog-buttons">
         <button id="cancelReset">Giữ hồ sơ</button

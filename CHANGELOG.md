@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.4.0 — Multiple CVs & Recovery
+
+- Quản lý nhiều CV độc lập: tạo/nhân bản, tên hồ sơ, trường/vị trí, chọn nhanh, tìm, lưu trữ và khôi phục.
+- Lịch sử riêng cho từng CV: tự lưu mốc, đặt tên phiên bản, so sánh nội dung/thiết kế giữa CV hoặc lịch sử, giữ hiện trạng trước khôi phục/đặt lại/đổi vị trí.
+- Collection schema 1 chứa CV schema 2; tự chuyển dữ liệu v1/v2, giữ key gốc. Lưu một record có kiểm tra phiên bản trước ghi; báo lỗi quota/tab khác, không tự ghi đè bản hỏng.
+- Backup một/toàn bộ CV có lịch sử và ảnh gom tài nguyên; nhập thành bản sao ID mới, nhận JSON cũ, không ghi đè CV hiện tại.
+- Sửa Landing page: cùng SVG/hình học với A4 cho cả bốn mẫu, sắp xếp/ẩn/crop/đen trắng/phân trang. HTML web và CV HTML cùng trang A4, không còn hero cũ.
+- Tên tệp xuất phân biệt theo tên hồ sơ/đơn vị/ứng viên; dialog xuất ghi rõ CV đang dùng.
+- UI quản lý/so sánh cho desktop/mobile. Chi tiết kiểm tra và giới hạn trong VERIFICATION.md.
+
 ## v1.3.1 — Modern 1 Layout
 
 - Thêm Modern 1 · Thanh lịch, bố cục tham khảo liên kết Boss chọn: ảnh tròn bên trái, tên/vị trí cùng hàng khi đủ chỗ, liên hệ hai cột, tiêu đề mục đỏ trầm và đường kẻ mảnh.
