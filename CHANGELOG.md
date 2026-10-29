@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.1 — Modern 1 Layout
+
+- Thêm Modern 1 · Thanh lịch, bố cục tham khảo liên kết Boss chọn: ảnh tròn bên trái, tên/vị trí cùng hàng khi đủ chỗ, liên hệ hai cột, tiêu đề mục đỏ trầm và đường kẻ mảnh.
+- Kinh nghiệm, học vấn và dự án có phần chức danh/chuyên ngành/thời gian bên trái, công ty/nội dung bên phải; hàng sau đợi cả hai phần kết thúc, nội dung dài tự phân trang.
+- Ảnh tròn có viền trắng và màu, cắt cùng hình học trong SVG/PDF; icon liên hệ dạng vector. Giữ căn ảnh, zoom và chế độ đen trắng.
+- Hồ sơ mới dùng mẫu Modern 1 và font tiêu đề modern. Hồ sơ/backup cũ giữ mẫu đã lưu; schema/key v2 không đổi; v1.3.0 không nhận template mới nên cần đổi mẫu trước rollback.
+- Thư viện bốn mẫu, responsive 4/2/1 cột theo khung màn hình. Thêm kiểm tra hàng dài, liên hệ, ảnh tròn, PDF thật và dữ liệu giữ nguyên.
+
 ## v1.3.0 — Professional Templates
 
 - Thiết kế lại mặc định Academic Executive: đầu trang xanh mực/sắc đồng, hai cột, tiêu đề serif và liên hệ cột phụ.

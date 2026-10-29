@@ -1,3 +1,4 @@
+import { createModernOneLayout, CONTACT_ICONS } from "./modern-one.js";
 import { grayscalePhoto } from "./photo-grayscale.js";
 import { templateFor } from "./templates.js";
 import { escapeHtml as esc, SECTIONS, isDraft, nfc } from "./model.js";
@@ -102,6 +103,21 @@ export function paletteFor(data) {
       light: "#ffffff",
       gold: "#d6d6d6",
     };
+  if (data.design.template === "modern1")
+    return {
+      ...base,
+      ink: "#252525",
+      muted: "#626262",
+      accent:
+        { navy: "#a44f5a", forest: "#2f7562", burgundy: "#8e4967" }[
+          data.design.theme
+        ] || "#a44f5a",
+      soft: "#f7f4f4",
+      paper: "#ffffff",
+      header: "#ffffff",
+      light: "#ffffff",
+      gold: "#a44f5a",
+    };
   return {
     ...base,
     paper: "#fbfaf6",
@@ -111,6 +127,12 @@ export function paletteFor(data) {
   };
 }
 export function createLayout(data, metrics) {
+  if (templateFor(data).id === "modern1")
+    return createModernOneLayout(data, metrics, {
+      PAGE,
+      wrapText,
+      colors: paletteFor(data),
+    });
   const { profile: p, design: d } = data,
     template = templateFor(data),
     c = paletteFor(data),
@@ -876,6 +898,8 @@ export function renderSVG(
     .map((t, i) => {
       if (t.type === "text")
         return `<text x="${t.x}" y="${t.y}" font-size="${t.size}" font-family="${t.font === "serif" ? "Atelier Serif" : "Atelier Sans"}" font-weight="${t.font === "bold" ? 700 : 400}" fill="${t.color}" ${editable && t.path ? `data-edit="${esc(t.path)}" data-group="${esc(t.tab)}" tabindex="0" role="button" aria-label="Sửa ${esc(t.text)}"` : ""}>${esc(t.text)}</text>`;
+      if (t.type === "icon")
+        return `<path d="${CONTACT_ICONS[t.name]}" transform="translate(${t.x} ${t.y}) scale(${t.width / 14})" fill="none" stroke="${t.color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>`;
       if (t.type === "rect")
         return `<rect x="${t.x}" y="${t.y}" width="${t.width}" height="${t.height}" fill="${t.fill || "none"}" ${t.border ? `stroke="${t.border}" stroke-width="${t.borderWidth || 0.5}"` : ""}/>`;
       if (t.type === "line")
@@ -886,8 +910,10 @@ export function renderSVG(
           t.sourceWidth || t.width,
           t.sourceHeight || t.height,
         );
-        return `<defs>${t.monochrome ? `<filter id="gray-${idPrefix}-${index}-${i}" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values=".2126 .7152 .0722 0 0 .2126 .7152 .0722 0 0 .2126 .7152 .0722 0 0 0 0 0 1 0"/></filter>` : ""}<clipPath id="photo-${idPrefix}-${index}-${i}"><rect x="${t.x}" y="${t.y}" width="${t.width}" height="${t.height}"/></clipPath></defs><image href="${esc(t.src)}" x="${fit.x}" y="${fit.y}" width="${fit.width}" height="${fit.height}" clip-path="url(#photo-${idPrefix}-${index}-${i})" ${t.monochrome ? `filter="url(#gray-${idPrefix}-${index}-${i})"` : ""} ${editable ? 'data-edit="profile.photo" data-group="profile"' : ""}/>`;
+        return `<defs>${t.monochrome ? `<filter id="gray-${idPrefix}-${index}-${i}" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values=".2126 .7152 .0722 0 0 .2126 .7152 .0722 0 0 .2126 .7152 .0722 0 0 0 0 0 1 0"/></filter>` : ""}<clipPath id="photo-${idPrefix}-${index}-${i}">${t.shape === "circle" ? `<circle cx="${t.x + t.width / 2}" cy="${t.y + t.height / 2}" r="${t.width / 2 - (t.inset || 0)}"/>` : `<rect x="${t.x}" y="${t.y}" width="${t.width}" height="${t.height}"/>`}</clipPath></defs><image href="${esc(t.src)}" x="${fit.x}" y="${fit.y}" width="${fit.width}" height="${fit.height}" clip-path="url(#photo-${idPrefix}-${index}-${i})" ${t.monochrome ? `filter="url(#gray-${idPrefix}-${index}-${i})"` : ""} ${editable ? 'data-edit="profile.photo" data-group="profile"' : ""}/>${t.shape === "circle" ? `<circle cx="${t.x + t.width / 2}" cy="${t.y + t.height / 2}" r="${t.width / 2}" fill="none" stroke="${t.border}" stroke-width="${t.borderWidth}" pointer-events="none"/>` : ""}`;
       }
+      if (t.shape === "circle")
+        return `<circle cx="${t.x + t.width / 2}" cy="${t.y + t.height / 2}" r="${t.width / 2}" fill="${t.fill}" stroke="${t.border}" stroke-width="${t.borderWidth}" ${editable ? 'data-edit="profile.photo" data-group="profile" tabindex="0" role="button" aria-label="Thêm ảnh đại diện"' : ""}/>`;
       return `<rect x="${t.x}" y="${t.y}" width="${t.width}" height="${t.height}" fill="${t.fill || layout.colors.soft}" stroke="${t.border || layout.colors.accent}" stroke-width=".6" ${editable ? 'data-edit="profile.photo" data-group="profile" tabindex="0" role="button" aria-label="Thêm ảnh đại diện"' : ""}/>`;
     })
     .join("")}</svg>`;
@@ -897,7 +923,7 @@ export async function createPDF(data, { PDFLib, fontkit, fontBytes }) {
   doc.registerFontkit(fontkit);
   doc.setTitle(data.profile.name + " - " + data.profile.role);
   doc.setAuthor(data.profile.name);
-  doc.setCreator("CV Atelier v1.3.0");
+  doc.setCreator("CV Atelier v1.3.1");
   const embedded = {};
   for (const [key, bytes] of Object.entries(fontBytes))
     embedded[key] = await doc.embedFont(bytes, {
@@ -930,6 +956,14 @@ export async function createPDF(data, { PDFLib, fontkit, fontBytes }) {
           size: t.size,
           font: embedded[t.font],
           color: rgb(t.color),
+        });
+      } else if (t.type === "icon") {
+        page.drawSvgPath(CONTACT_ICONS[t.name], {
+          x: t.x,
+          y: layout.height - t.y,
+          scale: t.width / 14,
+          borderColor: rgb(t.color),
+          borderWidth: 1.6,
         });
       } else if (t.type === "line") {
         page.drawLine({
@@ -965,17 +999,58 @@ export async function createPDF(data, { PDFLib, fontkit, fontBytes }) {
             );
         }
         const f = imageFit(t, image.width, image.height);
-        page.pushOperators(
-          PDFLib.pushGraphicsState(),
-          PDFLib.rectangle(
-            t.x,
-            layout.height - t.y - t.height,
-            t.width,
-            t.height,
-          ),
-          PDFLib.clip(),
-          PDFLib.endPath(),
-        );
+        page.pushOperators(PDFLib.pushGraphicsState());
+        if (t.shape === "circle") {
+          const cx = t.x + t.width / 2,
+            cy = layout.height - t.y - t.height / 2,
+            r = t.width / 2 - (t.inset || 0),
+            k = 0.5522847498307936 * r;
+          page.pushOperators(
+            PDFLib.moveTo(cx + r, cy),
+            PDFLib.appendBezierCurve(
+              cx + r,
+              cy + k,
+              cx + k,
+              cy + r,
+              cx,
+              cy + r,
+            ),
+            PDFLib.appendBezierCurve(
+              cx - k,
+              cy + r,
+              cx - r,
+              cy + k,
+              cx - r,
+              cy,
+            ),
+            PDFLib.appendBezierCurve(
+              cx - r,
+              cy - k,
+              cx - k,
+              cy - r,
+              cx,
+              cy - r,
+            ),
+            PDFLib.appendBezierCurve(
+              cx + k,
+              cy - r,
+              cx + r,
+              cy - k,
+              cx + r,
+              cy,
+            ),
+            PDFLib.closePath(),
+          );
+        } else
+          page.pushOperators(
+            PDFLib.rectangle(
+              t.x,
+              layout.height - t.y - t.height,
+              t.width,
+              t.height,
+            ),
+          );
+        page.pushOperators(PDFLib.clip(), PDFLib.endPath());
         page.drawImage(image, {
           x: f.x,
           y: layout.height - f.y - f.height,
@@ -983,6 +1058,25 @@ export async function createPDF(data, { PDFLib, fontkit, fontBytes }) {
           height: f.height,
         });
         page.pushOperators(PDFLib.popGraphicsState());
+        if (t.shape === "circle")
+          page.drawEllipse({
+            x: t.x + t.width / 2,
+            y: layout.height - t.y - t.height / 2,
+            xScale: t.width / 2,
+            yScale: t.height / 2,
+            borderColor: rgb(t.border),
+            borderWidth: t.borderWidth,
+          });
+      } else if (t.shape === "circle") {
+        page.drawEllipse({
+          x: t.x + t.width / 2,
+          y: layout.height - t.y - t.height / 2,
+          xScale: t.width / 2,
+          yScale: t.height / 2,
+          color: rgb(t.fill),
+          borderColor: rgb(t.border),
+          borderWidth: t.borderWidth,
+        });
       } else
         page.drawRectangle({
           x: t.x,

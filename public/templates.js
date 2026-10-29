@@ -1,4 +1,14 @@
 export const TEMPLATES = {
+  modern1: {
+    id: "modern1",
+    name: "Modern 1 · Thanh lịch",
+    label: "Ảnh tròn · Kinh nghiệm theo hàng",
+    description:
+      "Ảnh tròn bên trái, tên và liên hệ phía trên. Chức danh/thời gian đối diện với nội dung kinh nghiệm.",
+    layout: "single",
+    badge: "Mới · Mặc định",
+    sideSections: [],
+  },
   academic: {
     id: "academic",
     name: "Academic Executive",
@@ -6,7 +16,7 @@ export const TEMPLATES = {
     description:
       "Đầu trang đậm, hai cột cân đối và sắc đồng tinh tế. Dành cho hồ sơ trong môi trường đại học.",
     layout: "sidebar",
-    badge: "Mẫu mặc định",
+    badge: "Học thuật",
     sideSections: [
       "institutions",
       "education",

@@ -396,6 +396,7 @@ p {
 }
 .cv-page [data-edit] {
   cursor: pointer;
+  pointer-events: bounding-box;
 }
 .cv-page [data-edit]:hover {
   fill: #926c3f;
@@ -1332,7 +1333,7 @@ dialog h2 {
   padding: 7px 24px;
 }
 .template-dialog {
-  width: 950px;
+  width: 1120px;
   max-width: calc(100vw - 40px);
   padding: 30px;
   overflow: auto;
@@ -1343,7 +1344,7 @@ dialog h2 {
 }
 .template-gallery {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 19px;
 }
 .template-card {
@@ -1477,6 +1478,7 @@ dialog h2 {
     width: 810px;
   }
   .template-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
   .template-card-title {

@@ -376,7 +376,7 @@ function readyDownload(name, content, type) {
 }
 function backup() {
   readyDownload(
-    "CV-Atelier-" + slug() + "-v1.3.0.json",
+    "CV-Atelier-" + slug() + "-v1.3.1.json",
     JSON.stringify(validateData(data), null, 2),
     "application/json;charset=utf-8",
   );

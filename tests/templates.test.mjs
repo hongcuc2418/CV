@@ -90,7 +90,7 @@ test("switching every template and back preserves all personal and professional 
     assert.deepEqual(d.institutions, before.institutions);
     assert.equal(d.design.margin, before.design.margin);
   }
-  selectTemplate(d, "academic");
+  selectTemplate(d, before.design.template);
   assert.deepEqual(d, before);
   assert.throws(() => selectTemplate(d, "unknown"));
 });
@@ -102,7 +102,7 @@ test("invalid template and monochrome values are rejected", () => {
   d.design.monochrome = "yes";
   assert.throws(() => validateData(d));
 });
-test("three templates produce distinct geometry with same data, default remains one page", () => {
+test("all templates produce distinct geometry with same data, default remains one page", () => {
   const signatures = [];
   for (const id of Object.keys(TEMPLATES)) {
     const d = clone(defaults);
@@ -117,7 +117,7 @@ test("three templates produce distinct geometry with same data, default remains 
       JSON.stringify(l.pages[0].items.map((t) => [t.type, t.x, t.y])),
     );
   }
-  assert.equal(new Set(signatures).size, 3);
+  assert.equal(new Set(signatures).size, Object.keys(TEMPLATES).length);
 });
 test("monochrome applies to every drawn colour and PDF-bound shape", () => {
   for (const id of Object.keys(TEMPLATES)) {
@@ -150,7 +150,13 @@ test("Classic ATS omits photos, keeps sequential section reading order and body 
   );
   assert.ok(t.indexOf("ASC") < t.indexOf("Phần mềm HRM"));
   assert.equal(laneFor(d, "institutions"), "main");
-  assert.equal(laneFor(defaults, "institutions"), "side");
+  assert.equal(
+    laneFor(
+      { ...defaults, design: { ...defaults.design, template: "academic" } },
+      "institutions",
+    ),
+    "side",
+  );
 });
 test("gallery clip paths have distinct IDs and no editing controls", () => {
   const d = clone(defaults);
@@ -185,7 +191,7 @@ test("all templates retain long content within page bounds at typography extreme
 });
 test("real PDF output for every template: default and long, A4 and matching page count", async () => {
   const output =
-    process.env.CV_QA_DIR || path.join(tmpdir(), "cv-atelier-v130-qa");
+    process.env.CV_QA_DIR || path.join(tmpdir(), "cv-atelier-v131-qa");
   await mkdir(output, { recursive: true });
   for (const id of Object.keys(TEMPLATES)) {
     for (const long of [false, true]) {
@@ -252,6 +258,7 @@ test("all templates export matching static HTML pages with inline fonts and no e
 
 test("Academic sidebar paginates independently without dropping main content or skills", () => {
   const d = clone(defaults);
+  d.design.template = "academic";
   d.expertise = Array.from(
     { length: 70 },
     (_, i) =>
@@ -263,4 +270,113 @@ test("Academic sidebar paginates independently without dropping main content or 
   const t = allText(layout);
   for (let i = 1; i <= 70; i++) assert.ok(t.includes(`Năng lực ${i}:`));
   assert.ok(t.includes("ASC") && t.includes("Phần mềm HRM"));
+});
+
+test("Modern 1 uses a circular portrait, adjacent name/role and a two-column contact grid", () => {
+  const d = clone(defaults);
+  d.design.template = "modern1";
+  Object.assign(d.profile, {
+    phone: "0900000000",
+    email: "ungvien@example.com",
+    address: "Địa chỉ mẫu",
+  });
+  const l = createLayout(d, metrics);
+  bounds(l);
+  const items = l.pages[0].items;
+  const name = items.find((t) => t.path === "profile.name"),
+    role = items.find((t) => t.path === "profile.role");
+  assert.equal(name.y, role.y);
+  assert.ok(name.x < role.x);
+  const icons = items.filter((t) => t.type === "icon");
+  assert.equal(icons.length, 3);
+  assert.equal(icons[0].y, icons[1].y);
+  assert.ok(icons[0].x < icons[1].x);
+  assert.ok(icons[2].y > icons[0].y);
+  const image = items.find((t) => t.type === "image");
+  assert.equal(image.shape, "circle");
+  assert.equal(image.width, image.height);
+  assert.ok(image.x < name.x);
+  const e = items.find((t) => t.path === "experiences.0.role"),
+    company = items.find((t) => t.path === "experiences.0.company");
+  assert.ok(e.x < company.x);
+  assert.ok(Math.abs(e.y - company.y) < 2);
+  const svg = renderSVG(l, 0);
+  assert.ok(svg.includes("<circle"));
+  assert.ok(!svg.includes("undefined"));
+});
+
+test("Modern 1 pairs long metadata and detail without overlapping the following entry", () => {
+  const d = clone(defaults);
+  d.design.template = "modern1";
+  d.experiences[0].role = "Vai trò đào tạo ".repeat(90);
+  d.experiences[0].period = "Thời gian ".repeat(30);
+  d.experiences[0].bullets = Array.from(
+    { length: 32 },
+    (_, i) =>
+      `Việc ${i + 1}: ` + "Rà soát và phối hợp dữ liệu đào tạo. ".repeat(4),
+  );
+  const l = createLayout(d, metrics);
+  bounds(l);
+  const t = allText(l);
+  for (let i = 1; i <= 32; i++) assert.ok(t.includes(`Việc ${i}:`));
+  const locate = (path) =>
+    l.pages.flatMap((p, i) =>
+      p.items.filter((t) => t.path === path).map((t) => ({ page: i, y: t.y })),
+    );
+  const first = [
+    ...locate("experiences.0.period"),
+    ...locate("experiences.0.role"),
+    ...locate("experiences.0.bullets"),
+  ].at(-1);
+  const second = locate("experiences.1.company")[0];
+  assert.ok(
+    second.page > first.page ||
+      (second.page === first.page && second.y > first.y),
+  );
+});
+
+test("Modern 1 hiding its portrait, reordering sections and hiding sections retain data", () => {
+  const d = clone(defaults);
+  d.design.template = "modern1";
+  d.design.photoVisible = false;
+  d.design.hiddenSections = ["summary"];
+  d.design.sectionOrder = [
+    "goal",
+    ...d.design.sectionOrder.filter((x) => x !== "goal"),
+  ];
+  const original = clone(d);
+  const l = createLayout(d, metrics);
+  bounds(l);
+  assert.deepEqual(d, original);
+  assert.ok(!l.pages[0].items.some((t) => t.type === "image"));
+  const headings = l.pages.flatMap((p) =>
+    p.items.filter((t) => !t.path && t.type === "text").map((t) => t.text),
+  );
+  assert.ok(
+    headings.indexOf("Mục tiêu nghề nghiệp") <
+      headings.indexOf("Kinh nghiệm làm việc"),
+  );
+  assert.ok(!headings.includes("Tóm tắt chuyên môn"));
+});
+
+test("Modern 1 has the same circular crop in SVG and a real PDF with PNG photo and vector icons", async () => {
+  const d = clone(defaults);
+  d.design.template = "modern1";
+  d.profile.photo =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAFElEQVR4nGP8z8DAwMDAxMDAwMDAAAANHQEDasKb6QAAAABJRU5ErkJggg==";
+  d.profile.photoWidth = 2;
+  d.profile.photoHeight = 2;
+  d.profile.phone = "0900000000";
+  d.profile.email = "ungvien@example.com";
+  d.profile.address = "Địa chỉ kiểm tra";
+  const l = createLayout(d, metrics),
+    svg = renderSVG(l, 0, { editable: false });
+  assert.ok(/<clipPath[^>]*><circle/.test(svg));
+  const result = await createPDF(d, opts);
+  const pdf = await globalThis.PDFLib.PDFDocument.load(result.bytes);
+  assert.equal(pdf.getPageCount(), l.pages.length);
+  const output =
+    process.env.CV_QA_DIR || path.join(tmpdir(), "cv-atelier-v131-qa");
+  await mkdir(output, { recursive: true });
+  await writeFile(path.join(output, "modern1-photo.pdf"), result.bytes);
 });

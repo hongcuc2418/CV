@@ -1,17 +1,21 @@
-# CV Atelier — v1.3.0
+# CV Atelier — v1.3.1
 
-Bản nâng cấp **Professional Templates** từ ZIP `CV-Atelier_v1.2.0(1).zip` Boss cung cấp. Giữ toàn bộ luồng Studio, nội dung, backup và xuất từ v1.2.0. Boss tự push GitHub và deploy Vercel.
+Bản tinh chỉnh **Modern 1 Layout** từ `CV-Atelier_v1.3.0.zip`. Thêm layout theo mẫu Boss chọn: ảnh tròn trái, tên/vị trí cùng hàng, liên hệ hai cột và kinh nghiệm có cột chức danh/thời gian. Giữ dữ liệu, ba mẫu cũ và các luồng Studio/PDF/HTML. Boss tự push GitHub và deploy Vercel.
 
 ## 1. Chức năng đã xây dựng
 
-### Thư viện mẫu CV v1.3.0
+### Thư viện mẫu CV v1.3.1
 
 | Mẫu | Thiết kế | Phù hợp |
 | --- | --- | --- |
-| Academic Executive — mặc định | Đầu trang xanh mực, sắc đồng, tiêu đề serif, hai cột | Hồ sơ ứng tuyển trong trường đại học |
+| Modern 1 · Thanh lịch — mặc định hồ sơ mới | Ảnh tròn viền đỏ trầm, tên/vị trí cùng hàng, liên hệ hai cột, kinh nghiệm theo hàng | Phong cách Boss chọn từ mẫu Modern 1 |
+| Academic Executive | Đầu trang xanh mực, sắc đồng, tiêu đề serif, hai cột | Hồ sơ ứng tuyển trong trường đại học |
 | Modern Professional | Một cột, tên nổi bật, nhịp mục rõ và hàng kinh nghiệm có nền nhẹ | Làm nổi bật kinh nghiệm, dự án và đóng góp |
 | Classic ATS | Một cột văn bản, đen trắng, không ảnh/mảng nền | Ưu tiên thứ tự đọc và trích xuất chữ |
 
+- **Với hồ sơ đã lưu:** app giữ mẫu và cỡ chữ/lề/font cũ. Để áp dụng layout mới, chọn **Mẫu CV chuyên nghiệp → Modern 1 · Thanh lịch**. Chọn **Kiểu dáng → Kiểu chữ tiêu đề → Hiện đại · Không chân** nếu muốn tiêu đề sans giống bản mặc định mới. Không cần đặt lại dữ liệu.
+- Mẫu mới chỉ dùng thông tin đã có. Liên hệ trống không hiện placeholder trên bản gửi; avatar để trống cho đến khi tải ảnh. Ẩn ảnh sẽ mở rộng vùng tên/liên hệ. Không tự thêm ngày sinh/giới tính hoặc thông tin chưa cung cấp.
+- Bố cục Modern 1 tham khảo [mẫu Boss gửi](https://www.topcv.vn/mau-cv-tieng-viet/modern_1_v2); source dựng bằng token vector, không dùng ảnh chụp mẫu làm CV.
 - Mở **Mẫu CV chuyên nghiệp** bên trái hoặc tên mẫu phía trên trang giấy. Thẻ xem trước dùng chính nội dung hồ sơ hiện tại.
 - Đổi mẫu giữ nguyên nội dung, xác nhận, ảnh, vị trí crop, lề/font/mật độ; có thể hoàn tác/làm lại. Lựa chọn được lưu ngay, có báo lỗi nếu trình duyệt không cho lưu.
 - **Bản đen trắng** áp dụng cho CV A4, PDF, CV HTML và phần A4 khi in Landing HTML; chữ, nền, đường nét và ảnh A4 chuyển sắc xám. Không thay ảnh gốc trong hồ sơ/backup. Landing page trên màn hình vẫn giữ thiết kế riêng.
@@ -66,7 +70,8 @@ HTML/CSS, JavaScript ES Modules, Node.js 22 hoặc 24 LTS cho dev/build/test. Ru
 | --- | --- |
 | `public/model.js` | Schema v2, Unicode NFC, migration, kiểm tra dữ liệu, xác nhận và gợi ý nội dung |
 | `public/legacy-model.js` | Schema/default v1 để nâng cấp dữ liệu cũ |
-| `public/templates.js` | Danh mục ba mẫu, chọn mẫu và phân cột |
+| `public/templates.js` | Danh mục bốn mẫu, chọn mẫu và phân cột |
+| `public/modern-one.js` | Hình học Modern 1, hàng kinh nghiệm hai phần và phân trang |
 | `public/photo-grayscale.js` | Chuyển ảnh sang xám khi xuất PDF mà không đổi ảnh gốc |
 | `public/document.js` | Font metrics, ngắt dòng, phân trang, tọa độ chung cho SVG A4 và PDF |
 | `public/app.js` | Studio, form, IME composition, lịch sử, ảnh và thao tác người dùng |
@@ -79,7 +84,7 @@ HTML/CSS, JavaScript ES Modules, Node.js 22 hoặc 24 LTS cho dev/build/test. Ru
 
 ## 4. Chạy local và build
 
-1. Giải nén ZIP, mở terminal trong thư mục `CV-Atelier_v1.3.0` có `package.json`.
+1. Giải nén ZIP, mở terminal trong thư mục `CV-Atelier_v1.3.1` có `package.json`.
 2. Cài Node.js 22 hoặc 24 LTS.
 3. Chạy:
 
@@ -117,7 +122,8 @@ Khi in bằng trình duyệt: chọn A4, lề None/mặc định theo CSS, scale
 ## 6. Dữ liệu, nâng cấp và khôi phục
 
 - Bản này lưu **riêng trong trình duyệt + tên miền hiện tại**, không phải database hoặc đồng bộ nhiều máy.
-- Giữ schema 2 và key v2 trong v1.3.0; thêm `design.template` và `design.monochrome` có giá trị mặc định khi đọc dữ liệu cũ. Backup v1.3.0 vẫn giữ tất cả trường cũ.
+- Giữ schema 2 và key v2 từ v1.3.0; v1.3.1 thêm giá trị template `modern1`, giữ nguyên nội dung và mẫu đã chọn. Hồ sơ mới dùng `modern1` và font tiêu đề modern. V1/v2 cũ thiếu trường mẫu vẫn nâng cấp sang Academic như trước.
+- Từ v1.3.0 đã thêm `design.template` và `design.monochrome` có giá trị mặc định khi đọc dữ liệu cũ. Backup v1.3.0 vẫn giữ tất cả trường cũ.
 - Key v1: `cv-atelier:v1`; key mới: `cv-atelier:v2`. Lần đầu mở bản mới, nếu chưa có v2 thì đọc và nâng cấp v1, giữ nguyên key v1. JSON backup v1 nhập được.
 - Dữ liệu lỗi không bị tự động ghi đè bằng mẫu. Thông báo phục hồi cho tải bản lưu gốc / khôi phục JSON / chủ động dùng mẫu mới.
 - Hết quota hoặc bị chặn storage: trạng thái lưu báo lỗi; giữ bản đang sửa trong bộ nhớ và cho tải sao lưu. Không tự xóa bản cũ để lấy dung lượng.
@@ -127,6 +133,8 @@ Khi in bằng trình duyệt: chọn A4, lề None/mặc định theo CSS, scale
 
 **Trước nâng cấp:** mở bản cũ → Sao lưu JSON → giữ ZIP/commit cũ → cập nhật source → deploy cùng domain → mở bản mới → kiểm tra dữ liệu. Nếu đổi domain, khôi phục JSON. Không cần reset hoặc xóa cache dữ liệu ứng viên.
 
+**Quay lại v1.3.0:** sao lưu JSON v1.3.1, chuyển sang Academic/Modern Professional/Classic trước khi dùng deployment cũ. V1.3.0 không nhận giá trị `modern1`; bản backup mới cần giữ để dùng lại khi nâng cấp. Không xóa localStorage để rollback.
+
 **Quay lại v1.2.0:** dùng deployment/commit v1.2.0 và giữ JSON v1.3.0. Bản v1.2.0 có thể bỏ trường mẫu mới khi lưu; giữ backup để khôi phục lựa chọn nếu nâng cấp lại.
 
 **Quay lại v1:** dùng deployment/commit cũ. Key v1 vẫn được giữ, nhưng các chỉnh sửa chỉ có trong schema v2 không tự chuyển ngược thành v1; giữ backup v2 để dùng lại khi quay về v1.3.0. Không xóa key v2 để rollback.
@@ -135,7 +143,7 @@ Giữ nguyên `schemaVersion` và các trường không sửa khi chỉnh JSON t
 
 ## 7. Xuất bản nội dung đã chỉnh
 
-Sửa trong editor **không tự push GitHub hoặc cập nhật nội dung cho người khác**. Mỗi trình duyệt có bản local riêng. Chưa có đăng nhập quản trị hay database trong v1.3.0.
+Sửa trong editor **không tự push GitHub hoặc cập nhật nội dung cho người khác**. Mỗi trình duyệt có bản local riêng. Chưa có đăng nhập quản trị hay database trong v1.3.1.
 
 - Muốn công khai bản chỉ xem: xuất Landing HTML, đổi tên thành `index.html`, deploy trên **repo riêng**; file đã chứa font và ảnh, không cần build. Không ghi đè app Studio nếu muốn giữ công cụ chỉnh sửa.
 - Muốn đổi mẫu mặc định của app: sao lưu JSON v2, dùng dữ liệu đó làm `defaults` trong `public/model.js` (giữ các hàm và hằng số), rồi check/test/build/push. Nên gửi JSON + ZIP để được cập nhật đúng source khi chưa quen sửa mã.
@@ -152,7 +160,7 @@ Tạo repo trống trên tài khoản của Boss; sau đó chạy trong thư m�
 git init
 git branch -M main
 git add .
-git commit -m "feat: release CV Atelier v1.3.0"
+git commit -m "feat: release CV Atelier v1.3.1"
 git remote add origin https://github.com/YOUR_OWNER/YOUR_REPO.git
 git push -u origin main
 ```
@@ -170,7 +178,7 @@ git fetch origin
 git status
 ```
 
-Chép các file v1.3.0 vào đúng thư mục dự án, rồi:
+Chép các file v1.3.1 vào đúng thư mục dự án, rồi:
 
 ```bash
 npm ci
@@ -178,7 +186,7 @@ npm run check
 npm test
 npm run build
 git add .
-git commit -m "feat: upgrade CV Atelier to v1.3.0"
+git commit -m "feat: upgrade CV Atelier to v1.3.1"
 git pull --rebase origin main
 git push origin main
 ```
@@ -211,9 +219,9 @@ Không có database/migration SQL; không thêm Supabase hoặc dịch vụ tr�
 | Hiện tượng | Cách xử lý |
 | --- | --- |
 | Chưa tải được font/PDF | Kiểm tra `public/fonts`, `public/vendor` đã push đủ; build và Root Directory đúng; không mở source bằng file:// |
-| Không thấy mẫu mới | Kiểm tra version v1.3.0, vào Mẫu CV chuyên nghiệp; deploy đủ `templates.js` và `photo-grayscale.js` |
+| Không thấy mẫu mới | Kiểm tra version v1.3.1, vào Mẫu CV chuyên nghiệp; deploy đủ `templates.js`, `modern-one.js` và `photo-grayscale.js` |
 | Không chuyển được mục sang cột khác | Academic có phân cột cố định; đổi thứ tự trong cột hoặc chọn mẫu một cột |
-| Font cũ vẫn xuất hiện | Kiểm tra version v1.3.0 trên giao diện, deployment mới và tải lại trang; không xóa dữ liệu hồ sơ |
+| Font cũ vẫn xuất hiện | Kiểm tra version v1.3.1 trên giao diện, deployment mới và tải lại trang; không xóa dữ liệu hồ sơ |
 | Dấu Unicode tổ hợp | App chuẩn hóa NFC khi nhận, lưu và xuất; chờ hoàn tất bộ gõ trước khi chuyển trường |
 | PDF nhiều trang | Rút gọn nội dung hoặc chỉnh lề/mật độ; zoom không làm PDF ngắn đi |
 | File chưa tải | Sau khi tạo tệp, bấm liên kết Tải tệp xuống; kiểm tra mục Downloads của trình duyệt |

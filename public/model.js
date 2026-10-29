@@ -2,7 +2,7 @@ import {
   defaults as legacyDefaults,
   validateData as validateLegacy,
 } from "./legacy-model.js";
-export const VERSION = "1.3.0";
+export const VERSION = "1.3.1";
 export const STORAGE_KEY = "cv-atelier:v2";
 export const LEGACY_KEY = "cv-atelier:v1";
 export const SECTIONS = {
@@ -73,6 +73,9 @@ export function migrateLegacy(raw) {
   };
 }
 export const defaults = migrateLegacy(legacyDefaults);
+// Keep migration behavior stable; only newly created profiles use the new style.
+defaults.design.template = "modern1";
+defaults.design.font = "modern";
 const str = (v, max = 6000) => {
   if (typeof v !== "string" || v.length > max)
     throw Error("Văn bản không hợp lệ hoặc vượt giới hạn " + max + " ký tự.");
@@ -140,7 +143,7 @@ export function validateData(raw) {
     throw Error("Màu hoặc font không hợp lệ.");
   if (
     d.template !== undefined &&
-    !["academic", "modern", "classic"].includes(d.template)
+    !["modern1", "academic", "modern", "classic"].includes(d.template)
   )
     throw Error("Mẫu CV không hợp lệ.");
   const design = {
