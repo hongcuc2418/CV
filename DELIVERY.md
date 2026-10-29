@@ -1,10 +1,10 @@
-# Bàn giao v1.2.0
+# Bàn giao v1.3.0
 
-- Nền nguồn: `CV-Atelier_v1.0.0(2).zip` Boss đính kèm.
-- Phạm vi: gộp Reliability & Export, CV Studio & PDF, Professional Content; sửa lỗi dấu tiếng Việt.
-- Bàn giao: ZIP source có thư mục gốc `CV-Atelier_v1.2.0`, README, CHANGELOG, ROADMAP, VERIFICATION, lockfile, tài nguyên font/PDF và giấy phép.
-- Không có `.env`, token, node_modules, cache, `.git`, source credential hoặc ảnh cá nhân trong gói.
-- Database: không dùng; dữ liệu vẫn lưu riêng trên trình duyệt.
-- GitHub/Vercel: Boss tự push/deploy theo yêu cầu; không thay tài khoản hoặc dự án hosting trong lần này.
-- Version kế tiếp: v1.3.0 Professional Templates, chưa triển khai.
-- Khi nâng cấp tiếp: gửi ZIP mới nhất và JSON backup nếu cần giữ nội dung đã nhập.
+- Nền nguồn: `CV-Atelier_v1.2.0(1).zip` Boss cung cấp.
+- Phạm vi: ba mẫu chuyên nghiệp; mặc định Academic Executive sang hơn; thư viện xem trước nội dung thật; đen trắng; đổi mẫu giữ dữ liệu; PDF/HTML theo mẫu.
+- ZIP có thư mục gốc `CV-Atelier_v1.3.0`, README tiếng Việt hướng dẫn local/GitHub/Vercel, CHANGELOG, ROADMAP, VERIFICATION, lockfile, font/vendor và giấy phép.
+- Không đóng gói `.git`, node_modules, dist, cache/log, QA, secret/token hoặc ảnh cá nhân.
+- Không dùng database/backend. Dữ liệu vẫn lưu riêng theo trình duyệt và domain; sao lưu JSON trước khi nâng cấp.
+- Boss tự push GitHub và deploy Vercel; lần này không thay project/tài khoản hosting.
+- Phiên bản tiếp theo đề xuất: v1.4.0 nhiều hồ sơ và lịch sử snapshot; chưa triển khai.
+- Khi nâng cấp tiếp: gửi ZIP này, kèm JSON backup nếu cần giữ nội dung đã nhập.

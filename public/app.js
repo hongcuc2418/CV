@@ -1,3 +1,4 @@
+import { TEMPLATES, templateFor, selectTemplate } from "./templates.js";
 import {
   VERSION,
   STORAGE_KEY,
@@ -201,7 +202,7 @@ function renderForm() {
   $("#groupSelect").value = group;
   if (group === "profile")
     $("#form").innerHTML =
-      `<p class="form-help">Bấm vào nội dung trên trang A4 để chỉnh nhanh. Thay đổi hiển thị ngay và được lưu trên trình duyệt.</p>${field("Họ và tên", "profile.name", p.name)}${field("Vị trí ứng tuyển", "profile.role", p.role)}${field("Tóm tắt chuyên môn", "profile.summary", p.summary, { area: true, rows: 5, help: "Ưu tiên 3–5 dòng, kinh nghiệm liên quan và giá trị phù hợp vị trí." })}${field("Điện thoại", "profile.phone", p.phone, { type: "tel" })}${field("Email", "profile.email", p.email, { type: "email" })}${field("Địa chỉ", "profile.address", p.address)}<hr class="form-divider"><h3 class="form-title">Ảnh đại diện</h3>${p.photo ? `<img class="photo-mini" src="${esc(p.photo)}" alt="Ảnh đại diện">` : ""}<div class="upload-actions"><button class="small-button" data-action="upload">${p.photo ? "Thay ảnh" : "Tải ảnh lên"}</button>${p.photo ? '<button class="small-button" data-action="removePhoto">Xóa ảnh</button>' : ""}</div><p class="form-help">JPEG, PNG, WebP · tối đa 8 MB. Ảnh được xử lý trên thiết bị, không gửi đến máy chủ.</p>${check("Hiển thị ảnh / khung ảnh trên CV", "design.photoVisible", d.photoVisible)}${p.photo ? `${field("Căn ngang (%)", "profile.photoX", p.photoX, { type: "range", min: 0, max: 100 })}${field("Căn dọc (%)", "profile.photoY", p.photoY, { type: "range", min: 0, max: 100 })}${field("Phóng ảnh", "design.photoZoom", d.photoZoom, { type: "range", min: 1, max: 2.5, step: 0.05 })}` : ""}<hr class="form-divider">${field("Mục tiêu nghề nghiệp", "profile.goal", p.goal, { area: true, rows: 4 })}${field("Nhãn trên landing page", "profile.eyebrow", p.eyebrow)}${field("Thông điệp trên landing page", "profile.tagline", p.tagline, { area: true, rows: 2 })}`;
+      `<p class="form-help">Bấm vào nội dung trên trang A4 để chỉnh nhanh. Thay đổi hiển thị ngay và được lưu trên trình duyệt.</p>${field("Họ và tên", "profile.name", p.name)}${field("Vị trí ứng tuyển", "profile.role", p.role)}${field("Tóm tắt chuyên môn", "profile.summary", p.summary, { area: true, rows: 5, help: "Ưu tiên 3–5 dòng, kinh nghiệm liên quan và giá trị phù hợp vị trí." })}${field("Điện thoại", "profile.phone", p.phone, { type: "tel" })}${field("Email", "profile.email", p.email, { type: "email" })}${field("Địa chỉ", "profile.address", p.address)}<hr class="form-divider"><h3 class="form-title">Ảnh đại diện</h3>${p.photo ? `<img class="photo-mini" src="${esc(p.photo)}" alt="Ảnh đại diện">` : ""}<div class="upload-actions"><button class="small-button" data-action="upload">${p.photo ? "Thay ảnh" : "Tải ảnh lên"}</button>${p.photo ? '<button class="small-button" data-action="removePhoto">Xóa ảnh</button>' : ""}</div><p class="form-help">JPEG, PNG, WebP · tối đa 8 MB. Ảnh được xử lý trên thiết bị, không gửi đến máy chủ.</p>${check("Hiển thị ảnh / khung ảnh trên CV", "design.photoVisible", d.photoVisible)}${p.photo ? `${field("Căn ngang (%)", "profile.photoX", p.photoX, { type: "range", min: 0, max: 100 })}${field("Căn dọc (%)", "profile.photoY", p.photoY, { type: "range", min: 0, max: 100 })}${field("Phóng ảnh", "design.photoZoom", d.photoZoom, { type: "range", min: 1, max: 2.5, step: 0.05 })}` : ""}<hr class="form-divider">${field("Mục tiêu nghề nghiệp", "profile.goal", p.goal, { area: true, rows: 4 })}${field("Nhãn trên landing page", "profile.eyebrow", p.eyebrow)}${field("Thông điệp cá nhân", "profile.tagline", p.tagline, { area: true, rows: 2 })}`;
   if (group === "experience")
     $("#form").innerHTML =
       `<p class="form-help">Chỉ liệt kê công ty / đơn vị từng công tác. Các trường đã tham gia dự án được trình bày riêng ở mục Dự án.</p>${data.experiences.map((e, i) => `<article class="form-card"><div class="form-card-head"><b>KINH NGHIỆM ${i + 1}</b><button class="delete" data-action="removeExperience" data-index="${i}">Xóa mục</button></div>${field("Công ty / đơn vị công tác", `experiences.${i}.company`, e.company)}${field("Chức danh / mảng công việc", `experiences.${i}.role`, e.role)}${field("Thời gian", `experiences.${i}.period`, e.period)}${field("Phạm vi công việc", `experiences.${i}.description`, e.description, { area: true, rows: 2 })}${field("Nhiệm vụ", `experiences.${i}.bullets`, e.bullets, { area: true, list: true, rows: 5, help: "Mỗi dòng một ý. Chỉ mô tả công việc thực tế." })}${field("Kết quả / đóng góp", `experiences.${i}.results`, e.results, { area: true, list: true, rows: 3, help: "Để trống khi chưa có dữ liệu; không tự tạo số liệu thành tích." })}${check("Tôi đã rà soát và xác nhận nội dung mục này", `experiences.${i}.confirmed`, e.confirmed)}</article>`).join("")}<button class="add-item" data-action="addExperience">+ Thêm kinh nghiệm</button>`;
@@ -231,7 +232,7 @@ function renderForm() {
   }
   if (group === "design")
     $("#form").innerHTML =
-      `<p class="form-help">Các thuộc tính bên dưới áp dụng cho trang A4 và PDF. Thu phóng trên thanh công cụ chỉ thay đổi cách xem.</p><h3 class="form-title">Bảng màu</h3><div class="swatches">${Object.entries(
+      `<p class="form-help">Thống nhất phong cách cho trang A4 và PDF. Thay đổi bố cục giữ nguyên nội dung hồ sơ.</p><button class="design-template-button" data-open-templates><span>Mẫu đang dùng</span><b>${templateFor(data).name} ↗</b></button><h3 class="form-title">Bảng màu</h3><div class="swatches">${Object.entries(
         PALETTES,
       )
         .map(
@@ -240,7 +241,7 @@ function renderForm() {
         )
         .join(
           "",
-        )}</div><label class="form-field"><span>Kiểu chữ tiêu đề</span><select data-path="design.font"><option value="editorial" ${d.font === "editorial" ? "selected" : ""}>Thanh lịch · Có chân</option><option value="modern" ${d.font === "modern" ? "selected" : ""}>Hiện đại · Không chân</option></select></label><h3 class="form-title">Mật độ nội dung</h3><div class="density"><button data-action="density" data-key="compact">Gọn</button><button data-action="density" data-key="balanced">Cân bằng</button><button data-action="density" data-key="airy">Thoáng</button></div>${field("Lề trang (mm)", "design.margin", d.margin, { type: "range", min: 10, max: 24 })}${field("Cỡ chữ thân bài (pt)", "design.fontSize", d.fontSize, { type: "range", min: 9, max: 13, step: 0.25 })}${field("Giãn dòng", "design.lineHeight", d.lineHeight, { type: "range", min: 1.2, max: 1.8, step: 0.05 })}${field("Khoảng cách mục (pt)", "design.sectionGap", d.sectionGap, { type: "range", min: 6, max: 22 })}${check("Hiện ảnh / khung ảnh", "design.photoVisible", d.photoVisible)}<p class="form-note">Nội dung dài được chuyển sang trang tiếp theo, không ép thu nhỏ chữ hoặc cắt dữ liệu để giữ một trang.</p><div class="mobile-order"><h3 class="form-title">Thứ tự & hiển thị các mục A4</h3>${data.design.sectionOrder.map((key, i) => `<div class="section-row"><span class="section-name">${SECTIONS[key]}</span><button class="small-button" data-action="move" data-key="${key}" data-delta="-1" aria-label="Đưa ${SECTIONS[key]} lên" ${i === 0 ? "disabled" : ""}>↑</button><button class="small-button" data-action="move" data-key="${key}" data-delta="1" aria-label="Đưa ${SECTIONS[key]} xuống" ${i === data.design.sectionOrder.length - 1 ? "disabled" : ""}>↓</button><button class="visibility" data-action="visibility" data-key="${key}" aria-label="Đổi hiển thị ${SECTIONS[key]}">${data.design.hiddenSections.includes(key) ? "○" : "◉"}</button></div>`).join("")}</div><button class="danger-button" data-action="reset">Đặt lại mẫu ban đầu</button>`;
+        )}</div><label class="form-field"><span>Kiểu chữ tiêu đề</span><select data-path="design.font"><option value="editorial" ${d.font === "editorial" ? "selected" : ""}>Thanh lịch · Có chân</option><option value="modern" ${d.font === "modern" ? "selected" : ""}>Hiện đại · Không chân</option></select></label><h3 class="form-title">Mật độ nội dung</h3><div class="density"><button data-action="density" data-key="compact">Gọn</button><button data-action="density" data-key="balanced">Cân bằng</button><button data-action="density" data-key="airy">Thoáng</button></div>${field("Lề trang (mm)", "design.margin", d.margin, { type: "range", min: 10, max: 24 })}${field("Cỡ chữ thân bài (pt)", "design.fontSize", d.fontSize, { type: "range", min: 9, max: 13, step: 0.25 })}${field("Giãn dòng", "design.lineHeight", d.lineHeight, { type: "range", min: 1.2, max: 1.8, step: 0.05 })}${field("Khoảng cách mục (pt)", "design.sectionGap", d.sectionGap, { type: "range", min: 6, max: 22 })}${templateFor(data).id === "classic" ? '<p class="form-note">Classic ATS không hiển thị ảnh. Tùy chọn ảnh của bạn được giữ cho các mẫu khác.</p>' : check("Hiện ảnh / khung ảnh", "design.photoVisible", d.photoVisible)}<p class="form-note">Nội dung dài được chuyển sang trang tiếp theo, không ép thu nhỏ chữ hoặc cắt dữ liệu để giữ một trang.</p><div class="mobile-order"><h3 class="form-title">Thứ tự & hiển thị các mục A4</h3>${data.design.sectionOrder.map((key, i) => `<div class="section-row"><span class="section-name">${SECTIONS[key]}</span><button class="small-button" data-action="move" data-key="${key}" data-delta="-1" aria-label="Đưa ${SECTIONS[key]} lên" ${i === 0 ? "disabled" : ""}>↑</button><button class="small-button" data-action="move" data-key="${key}" data-delta="1" aria-label="Đưa ${SECTIONS[key]} xuống" ${i === data.design.sectionOrder.length - 1 ? "disabled" : ""}>↓</button><button class="visibility" data-action="visibility" data-key="${key}" aria-label="Đổi hiển thị ${SECTIONS[key]}">${data.design.hiddenSections.includes(key) ? "○" : "◉"}</button></div>`).join("")}</div><button class="danger-button" data-action="reset">Đặt lại mẫu ban đầu</button>`;
 }
 function zoomFactor() {
   const sel = $("#zoom").value,
@@ -280,11 +281,47 @@ function paintPages() {
     )
     .join("");
 }
+function openTemplates() {
+  if (!env) {
+    toast("Chờ font và trang CV tải xong trước khi chọn mẫu.");
+    return;
+  }
+  $("#templateGallery").innerHTML = Object.values(TEMPLATES)
+    .map((t) => {
+      let preview = "";
+      try {
+        const example = clone(data);
+        selectTemplate(example, t.id);
+        const l = createLayout(example, env.metrics);
+        preview = renderSVG(l, 0, {
+          editable: false,
+          idPrefix: "thumb-" + t.id,
+        });
+      } catch {
+        preview =
+          '<div class="template-preview-error">Cần rút gọn nội dung để xem trước.</div>';
+      }
+      return `<button class="template-card ${templateFor(data).id === t.id ? "selected" : ""}" data-select-template="${t.id}" aria-pressed="${templateFor(data).id === t.id}"><span class="template-thumb" aria-hidden="true">${preview}<span class="template-badge">${t.badge}</span></span><span class="template-card-copy"><span class="template-card-title">${t.name}<span class="template-selection">${templateFor(data).id === t.id ? "✓" : "↗"}</span></span><span class="template-card-label">${t.label}</span><span class="template-card-description">${t.description}</span></span></button>`;
+    })
+    .join("");
+  $("#templateDialog").showModal();
+}
 function render() {
   document.body.dataset.theme = data.design.theme;
   document.body.dataset.font = data.design.font;
   document.title = (data.profile.name || "Hồ sơ") + " · CV Atelier";
   renderRail();
+  const template = templateFor(data);
+  $("#templateName").textContent = template.name;
+  $("#grayscaleToggle").checked =
+    data.design.monochrome || template.id === "classic";
+  $("#grayscaleToggle").disabled = template.id === "classic";
+  $("#laneNote").textContent =
+    template.id === "academic"
+      ? "Bố cục hai cột · Thứ tự mục được áp dụng trong từng cột."
+      : template.id === "classic"
+        ? "Bố cục một cột · Không ảnh, ưu tiên văn bản và thứ tự đọc."
+        : "Bố cục một cột · Thứ tự mục áp dụng từ trên xuống.";
   if (!env) return;
   try {
     layout = createLayout(data, env.metrics);
@@ -339,7 +376,7 @@ function readyDownload(name, content, type) {
 }
 function backup() {
   readyDownload(
-    "CV-Atelier-" + slug() + "-v1.2.0.json",
+    "CV-Atelier-" + slug() + "-v1.3.0.json",
     JSON.stringify(validateData(data), null, 2),
     "application/json;charset=utf-8",
   );
@@ -479,6 +516,24 @@ $("#form").addEventListener("change", (e) => {
     change(() => (data.target = e.target.value), { form: true });
 });
 document.addEventListener("click", (e) => {
+  const choice = e.target.closest("[data-select-template]");
+  if (choice) {
+    change(() => selectTemplate(data, choice.dataset.selectTemplate), {
+      form: true,
+    });
+    persist();
+    $("#templateDialog").close();
+    toast(
+      "Đã áp dụng " +
+        templateFor(data).name +
+        ". Nội dung hồ sơ được giữ nguyên.",
+    );
+    return;
+  }
+  if (e.target.closest("[data-open-templates]")) {
+    openTemplates();
+    return;
+  }
   const open = e.target.closest("[data-open]");
   if (open) {
     openGroup(open.dataset.open, open.dataset.reviewPath);
@@ -644,6 +699,13 @@ $("#sectionList").addEventListener("dragend", () => {
 });
 $("#groupSelect").onchange = (e) => openGroup(e.target.value);
 $("#profileNav").onclick = () => openGroup("profile");
+$("#templateOpen").onclick = openTemplates;
+$("#templateNav").onclick = openTemplates;
+$("#closeTemplate").onclick = () => $("#templateDialog").close();
+$("#grayscaleToggle").onchange = (e) => {
+  change(() => (data.design.monochrome = e.target.checked));
+  persist();
+};
 $("#designNav").onclick = () => openGroup("design");
 $("#reviewNav").onclick = () => openGroup("content");
 $("#mobileEdit").onclick = () => openGroup(group);

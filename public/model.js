@@ -2,7 +2,7 @@ import {
   defaults as legacyDefaults,
   validateData as validateLegacy,
 } from "./legacy-model.js";
-export const VERSION = "1.2.0";
+export const VERSION = "1.3.0";
 export const STORAGE_KEY = "cv-atelier:v2";
 export const LEGACY_KEY = "cv-atelier:v1";
 export const SECTIONS = {
@@ -30,6 +30,8 @@ export const escapeHtml = (s) =>
   );
 export { safeContact } from "./legacy-model.js";
 const designBase = {
+  template: "academic",
+  monochrome: false,
   margin: 14,
   fontSize: 10,
   lineHeight: 1.45,
@@ -136,7 +138,14 @@ export function validateData(raw) {
     !["editorial", "modern"].includes(d.font)
   )
     throw Error("Màu hoặc font không hợp lệ.");
+  if (
+    d.template !== undefined &&
+    !["academic", "modern", "classic"].includes(d.template)
+  )
+    throw Error("Mẫu CV không hợp lệ.");
   const design = {
+    template: d.template ?? "academic",
+    monochrome: d.monochrome === undefined ? false : bool(d.monochrome),
     theme: d.theme,
     font: d.font,
     margin: num(d.margin, 10, 24),

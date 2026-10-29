@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.3.0 — Professional Templates
+
+- Thiết kế lại mặc định Academic Executive: đầu trang xanh mực/sắc đồng, hai cột, tiêu đề serif và liên hệ cột phụ.
+- Thêm Modern Professional một cột và Classic ATS văn bản đen trắng, không ảnh.
+- Thư viện mẫu có thumbnail nội dung thực tế; chọn/hoàn tác mẫu giữ nguyên dữ liệu và các tùy chỉnh.
+- Mỗi mẫu dùng chung mô hình A4/PDF/HTML, phân trang khi nội dung dài. Classic giữ thứ tự đọc một cột; Academic sắp xếp trong từng cột.
+- Chế độ đen trắng cho cả preview A4 và bản xuất, gồm chuyển sắc xám ảnh PDF; giữ ảnh gốc trong dữ liệu.
+- Giữ schema/key v2, tự bổ sung trường template/monochrome cho backup cũ; không reset hồ sơ.
+- Kiểm tra nhiều mẫu, tương thích dữ liệu, PDF A4 và nội dung dài; lưu lựa chọn mẫu/đen trắng ngay sau thao tác.
+
 ## v1.2.0 — CV Studio, Reliable Export & Professional Content
 
 Bản phát hành gộp các phạm vi roadmap v1.0.1, v1.1.0 và v1.2.0 trong một lần nâng cấp.

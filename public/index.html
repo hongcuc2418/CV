@@ -47,6 +47,9 @@
         </p>
         <div class="section-label">CẤU TRÚC CV <span>Kéo để sắp xếp</span></div>
         <div id="sectionList" aria-label="Thứ tự các mục CV"></div>
+        <button id="templateNav" class="rail-action">
+          Mẫu CV chuyên nghiệp <span>▤</span>
+        </button>
         <button id="profileNav" class="rail-action">
           Thông tin & ảnh đại diện <span>↗</span></button
         ><button id="designNav" class="rail-action">
@@ -56,7 +59,7 @@
         </button>
         <div class="rail-footer">
           <span>© 2026 HuyVo. All rights reserved</span
-          ><small>v1.2.0 · Lưu riêng trên trình duyệt</small>
+          ><small>v1.3.0 · Lưu riêng trên trình duyệt</small>
         </div>
       </aside>
       <main id="workspace" class="workspace">
@@ -78,6 +81,16 @@
             ><button id="zoomIn" class="tool" aria-label="Phóng to">+</button>
           </div>
         </div>
+        <div class="template-strip">
+          <button id="templateOpen" class="template-current">
+            <span class="template-icon" aria-hidden="true">▤</span
+            ><span id="templateName">Academic Executive</span
+            ><span aria-hidden="true">⌄</span></button
+          ><label class="monochrome-control"
+            ><input id="grayscaleToggle" type="checkbox" />Bản đen trắng</label
+          >
+        </div>
+        <div id="laneNote" class="lane-note"></div>
         <div id="layoutWarnings" class="layout-notice" role="status"></div>
         <div id="canvasScroll" class="canvas-scroll">
           <div id="pages" class="pages">
@@ -186,6 +199,26 @@
       <p id="downloadInfo"></p>
       <a id="readyLink" class="primary" download>Tải tệp xuống ↓</a
       ><button id="closeDownload" class="print-link">Đóng</button>
+    </dialog>
+    <dialog id="templateDialog" class="template-dialog">
+      <div class="dialog-heading">
+        <div>
+          <span class="panel-eyebrow">THIẾT KẾ CHO DẤU ẤN RIÊNG</span>
+          <h2>Chọn phong cách cho hồ sơ</h2>
+        </div>
+        <button id="closeTemplate" class="tool" aria-label="Đóng bộ chọn mẫu">
+          ×
+        </button>
+      </div>
+      <p class="dialog-copy">
+        Xem trước bằng nội dung của bạn. Đổi mẫu giữ nguyên các thông tin đã
+        nhập.
+      </p>
+      <div id="templateGallery" class="template-gallery"></div>
+      <p class="template-gallery-note">
+        Classic ATS ưu tiên văn bản một cột, không ảnh. Khả năng đọc tùy thuộc
+        hệ thống tuyển dụng; hãy kiểm tra bản PDF trước khi gửi.
+      </p>
     </dialog>
     <div id="toast" class="studio-toast" role="status" hidden></div>
     <div id="printOutput"></div>
